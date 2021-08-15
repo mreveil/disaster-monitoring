@@ -17,14 +17,13 @@
 */
 
 var reports = document.querySelector("#jsonData").getAttribute('data-json');
-console.log("Reports are:", reports, "voila")
-reports = [];
 var nreports = 0;
 try{
   reports = JSON.parse(reports);
   nreports = reports.length;
 } catch(err){
-  console.error("No report to load.")
+  console.error("Unable to load reports. Error: ", err);
+  reports = [];
 }
 help_needed_el = document.getElementById("nreports")
 help_needed_el.innerHTML = nreports;

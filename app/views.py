@@ -26,7 +26,11 @@ def index(request):
 
     context = {}
     context["segment"] = "index"
+    json_serializer = serializers.get_serializer("json")()
+    reports = json_serializer.serialize(Report.objects.all(), ensure_ascii=False)
 
+    context = {}
+    context["data"] = reports
     html_template = loader.get_template("index.html")
     return HttpResponse(html_template.render(context, request))
 
@@ -35,11 +39,8 @@ def index(request):
 def pages(request):
     # All resource paths end in .html.
     # Pick out the html file name from the url. And load that template.
-    json_serializer = serializers.get_serializer("json")()
-    reports = json_serializer.serialize(Report.objects.all(), ensure_ascii=False)
 
     context = {}
-    context["data"] = reports
 
     try:
 
@@ -57,7 +58,7 @@ def pages(request):
     except:
 
         html_template = loader.get_template("page-500.html")
-        return HttpResponse(html_template.render(context, request),)
+        return HttpResponse(html_template.render(context, request))
 
 
 class UserViewSet(viewsets.ModelViewSet):
