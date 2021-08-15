@@ -13,3 +13,4 @@ djangorestframework
 channels
 psycopg2==2.8.6
 sentry-sdk
+wagtail
