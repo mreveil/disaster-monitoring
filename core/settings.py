@@ -41,7 +41,7 @@ MIDDLEWARE = [
     "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
-    # 'django.middleware.csrf.CsrfViewMiddleware',
+    "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
@@ -85,13 +85,6 @@ DATABASES = {
         "ENGINE": "django.db.backends.postgresql_psycopg2",
         "NAME": "haitiearthquake",
     }
-    # 'default': {
-    #     'ENGINE': 'djongo',
-    #     'NAME': 'my-mongo',
-    #     'CLIENT': {
-    #        'host': 'localhost:27017',
-    #     }
-    # }
 }
 
 # Password validation
@@ -145,3 +138,8 @@ REST_FRAMEWORK = {
 }
 
 CSRF_COOKIE_SECURE = False
+
+
+# Heroku: Update database configuration from $DATABASE_URL.
+db_from_env = dj_database_url.config(conn_max_age=500)
+DATABASES["default"].update(db_from_env)
