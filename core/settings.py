@@ -80,7 +80,11 @@ CHANNEL_LAYERS = {
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
 
 DATABASES = {
-    "default": {"ENGINE": "django.db.backends.sqlite3", "NAME": "db.sqlite3",}
+    # "default": {"ENGINE": "django.db.backends.sqlite3", "NAME": "db.sqlite3",}
+    "default": {
+        "ENGINE": "django.db.backends.postgresql_psycopg2",
+        "NAME": "haitiearthquake",
+    }
     # 'default': {
     #     'ENGINE': 'djongo',
     #     'NAME': 'my-mongo',
