@@ -2,7 +2,7 @@
 
 This is a web-based dashboard that can be deployed in the event of a widespread natural disaster to crowdsource, contextualize and centralize information.
 
-Reports are crowdsourced and curated from public information on social media and news outlets, augmented with geolocation and other details and shown on a map. This can help first responders and interested parties quickly identify locations with the greater and route resources accordingly.
+Reports are crowdsourced and curated from public information on social media and news outlets, augmented with geolocation and other details and shown on a map. This can help first responders and interested parties quickly identify locations with the greatest needs and route resources accordingly.
 
 This project was built as a response to the Aug. 14 2021 earthquake that struck the southern peninsula of Haiti. As a survivor of the 2010 earthquake, I created this project to help and perhaps as a way to make myself useful. I hope it will be used to help save lives in other disasters.
 

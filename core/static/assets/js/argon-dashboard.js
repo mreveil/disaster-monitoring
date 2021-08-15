@@ -228,7 +228,7 @@ function initMap() {
       title: report.fields.report_type
     });
     map.setCenter(marker.getPosition())
-    const date_str = report.fields.publication_time.toLocaleString("en-GB", {
+    const date_str = new Date(report.fields.publication_time).toLocaleString("en-GB", {
       day: "numeric",
       month: "short",
       year: "numeric",
@@ -236,7 +236,7 @@ function initMap() {
       minute: "2-digit"
     });
     var contentString = '<div class="info-window-content"><h2>' +
-                        date_str + ": " +
+                        date_str + " | " +
                         report.fields.report_type +'</h2>' +
                       '<h3>' + report.fields.title + '</h3>' + report.fields.embed_code + '</div>';
 

@@ -150,9 +150,12 @@ STATICFILES_DIRS = (os.path.join(CORE_DIR, "core/static"),)
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 MEDIA_URL = "/media/"
 
-WAGTAIL_SITE_NAME = "Haiti Earthquake"
+WAGTAIL_SITE_NAME = "Haiti Earthquake Dashboard"
 
 ####################################
+
+DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
 REST_FRAMEWORK = {
     "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
     "PAGE_SIZE": 10,
