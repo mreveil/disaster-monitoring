@@ -12,7 +12,7 @@
       <!-- Table -->
       <div class="row justify-content-center">
         <div class="col-lg-6 col-md-8">
-        
+
           <div class="card bg-secondary shadow border-0">
             <div class="card-header bg-transparent pb-5">
               <div class="text-muted text-center mt-2 mb-4"><small>Sign up with</small></div>
@@ -33,22 +33,22 @@
                 {% if msg %}
                   <small>{{ msg | safe }}</small>
                 {% else %}
-                  Add your credentials or <a href={% url 'login' %} >authenticate</a> with an existing account.
-                {% endif %}  
-              
+                  Please create an account only if you want to help curate this website. Thank you!
+                {% endif %}
+
               </div>
 
               {% if success %}
 
                 <p class="text-center">
                   Please <a href={% url 'login' %} class="text-black text-small">authenticate</a> using the new account.
-                </p>  
+                </p>
 
               {% else %}
 
                 <form method="POST">
                   {% csrf_token %}
-            
+
                   <div class="form-group">
                     <div class="input-group input-group-alternative mb-3">
                       <div class="input-group-prepend">
@@ -104,8 +104,8 @@
                   </div>
                 </form>
 
-              {% endif %}  
-  
+              {% endif %}
+
             </div>
           </div>
 
@@ -117,10 +117,6 @@
         <div class="col-3">
           <a href="{% url 'login' %}" class="text-light"><small>Login</small></a>
         </div>
-        <div class="col-3 text-right">
-          <a target="_blank" 
-             href="https://appseed.us" class="text-light"><small>LIVE Support</small></a>
-        </div>
       </div>
 
     </div>
@@ -128,5 +124,5 @@
 
 {% endblock content %}
 
-<!-- Specific JS goes HERE --> 
+<!-- Specific JS goes HERE -->
 {% block javascripts %}{% endblock javascripts %}
