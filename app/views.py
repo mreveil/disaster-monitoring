@@ -21,7 +21,7 @@ from django.core import serializers
 import json
 
 
-@login_required(login_url="/login/")
+# @login_required(login_url="/login/")
 def index(request):
 
     context = {}
