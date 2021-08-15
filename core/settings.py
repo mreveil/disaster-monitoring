@@ -35,7 +35,6 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    "app",  # Enable the inner app
     "rest_framework",
     "channels",
     "rest_framework.authtoken",
@@ -52,6 +51,8 @@ INSTALLED_APPS = [
     "wagtail.core",
     "modelcluster",
     "taggit",
+    "app",  # Enable the inner app
+    "blog",
 ]
 
 MIDDLEWARE = [
@@ -147,7 +148,7 @@ STATICFILES_DIRS = (os.path.join(CORE_DIR, "core/static"),)
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 MEDIA_URL = "/media/"
 
-WAGTAIL_SITE_NAME = "Haiti Earthquake | Contents"
+WAGTAIL_SITE_NAME = "Haiti Earthquake"
 
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
