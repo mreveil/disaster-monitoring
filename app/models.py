@@ -29,6 +29,7 @@ class Report(models.Model):
     embed_code = models.CharField(max_length=1000)
     # resolved = models.BooleanField(default=False)
     # dismissed = models.BooleanField(default=False)
+    # approved = models.BooleanField(default=True)
 
     class Meta:
         unique_together = ["pub_link"]
