@@ -35,10 +35,24 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    "app",  # Enable the inner app
     "rest_framework",
     "channels",
     "rest_framework.authtoken",
+    "wagtail.contrib.forms",
+    "wagtail.contrib.redirects",
+    "wagtail.embeds",
+    "wagtail.sites",
+    "wagtail.users",
+    "wagtail.snippets",
+    "wagtail.documents",
+    "wagtail.images",
+    "wagtail.search",
+    "wagtail.admin",
+    "wagtail.core",
+    "modelcluster",
+    "taggit",
+    "app",  # Enable the inner app
+    "blog",
 ]
 
 MIDDLEWARE = [
@@ -50,6 +64,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "wagtail.contrib.redirects.middleware.RedirectMiddleware",
 ]
 
 ROOT_URLCONF = "core.urls"
@@ -129,6 +144,12 @@ STATIC_URL = "/static/"
 STATICFILES_DIRS = (os.path.join(CORE_DIR, "core/static"),)
 #############################################################
 #############################################################
+
+MEDIA_ROOT = os.path.join(BASE_DIR, "media")
+MEDIA_URL = "/media/"
+
+WAGTAIL_SITE_NAME = "Haiti Earthquake"
+
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 

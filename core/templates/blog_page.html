@@ -1,0 +1,39 @@
+{% extends 'layouts/base.html' %}
+
+{% block title %} Blog {% endblock title %}
+{% load wagtailcore_tags %}
+
+{% block body_class %}template-blogpage{% endblock %}
+{% block content %}
+
+    <!-- Header -->
+    <div class="header bg-gradient-primary pb-8 pt-5 pt-md-8">
+      <div class="container-fluid">
+        <div style="text-align: center; color: white;">
+          <p class="meta">{{ page.date }}</p>
+          <h1 style="color: white;">{{ page.title }}</h1>
+          <div class="intro">{{ page.intro }}</div>
+
+        </div>
+      </div>
+    </div>
+
+    <div class="container-fluid">
+
+      <div class="row">
+        <div class="col">
+          <div class="blogcard">
+            {{ page.body|richtext }}
+            <p><a href="{{ page.get_parent.url }}">Return to blog</a></p>
+          </div>
+        </div>
+      </div>
+
+      {% include "includes/footer.html" %}
+
+    </div>
+
+{% endblock content %}
+
+<!-- Specific JS goes HERE -->
+{% block javascripts %}{% endblock javascripts %}
