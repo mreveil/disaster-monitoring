@@ -29,6 +29,12 @@ class Report(models.Model):
     report_type = models.CharField(max_length=25)  # Casualties, Damages, Help Needed
     bad_feedback = models.IntegerField()
     embed_code = models.CharField(max_length=1000)
+    # resolved = models.BooleanField(default=False)
+    # dismissed = models.BooleanField(default=False)
 
     class Meta:
         unique_together = ["pub_link"]
+
+    def __str__(self):
+        return "%s" % (self.title)
+

@@ -218,10 +218,10 @@ function initMap() {
   }
 
   map = new google.maps.Map(map, mapOptions);
-
+  var marker, openInfoWindow;
   for (const report of reports){
     var myLatlng = new google.maps.LatLng(report.fields.latitude, report.fields.longitude);
-    var marker = new google.maps.Marker({
+    marker = new google.maps.Marker({
       position: myLatlng,
       map: map,
       animation: google.maps.Animation.DROP,
@@ -246,7 +246,10 @@ function initMap() {
 
     google.maps.event.addListener(marker,'click', (function(marker,contentString,infowindow){
       return function() {
+          if (openInfoWindow)
+            openInfoWindow.close();
           infowindow.setContent(contentString);
+          openInfoWindow = infowindow;
           infowindow.open(map,marker);
       };
   })(marker,contentString,infowindow));
