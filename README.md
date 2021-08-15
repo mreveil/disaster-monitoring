@@ -1,23 +1,23 @@
 # Disaster Monitoring Dashboard
 
-This is web-based dashboard that can be deployed in the event of a widespread natural disaster to crowdsource, contextualize and centralize information to help provide relief to those affected.
+This is a web-based dashboard that can be deployed in the event of a widespread natural disaster to crowdsource, contextualize and centralize information.
 
-Reports are crowdsourced and curated from public information on social media and news outlets, augmented with geo-locations and other details and shown on a map. This can help first responders and interested parties quickly identify locations with the greater and route resources accordingly.
+Reports are crowdsourced and curated from public information on social media and news outlets, augmented with geolocation and other details and shown on a map. This can help first responders and interested parties quickly identify locations with the greater and route resources accordingly.
 
-This project was built as a response to the Aug. 14 2021 earthquake that struck the southern peninsula of Haiti. As a survivor of the 2010 earthquake, I created this project to help and perhaps as a way to make myself useful. I hope it will be used to help save lives in other disasters. Feel free to deploy it as needed.
+This project was built as a response to the Aug. 14 2021 earthquake that struck the southern peninsula of Haiti. As a survivor of the 2010 earthquake, I created this project to help and perhaps as a way to make myself useful. I hope it will be used to help save lives in other disasters.
 
 ## Features
 
-This is a Dango-based platform and therefore comes with the flexiblity and power that this popular Python web framework offers.
+This is a Dango-based platform and therefore comes with the flexiblity and power afforded by Python and the Django web framework.
 
-- Crowdsourcing information: users can add info that will be shown on the dashboard after approval
+- Crowdsourcing information: users can add info to be shown on the dashboard after approval.
 - Timeline (coming soon): A timeline of all relevant events is compiled and shown automatically.
-- CMS: It also comes with prepackaged with the wagtail Content Management System (CMS) allowing users to publish all types of contents to keep the public informed.
+- CMS: It also comes prepackaged with a Content Management System (CMS) allowing users to publish all types of contents to keep the public informed.
 - Etc.
 
 ## Developer Guide
 
-To deploy, the following environment variables (or configVars on Heroku) should be defined:
+To deploy, the following environment variables (or configVars on Heroku) are required:
 
 - DATABASE_URL
 - DB_ENGINE
