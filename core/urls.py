@@ -8,6 +8,7 @@ from django.urls import path, include
 from django.conf.urls.static import static
 from django.conf import settings
 from django.template import loader
+from django.http import HttpResponse
 
 from rest_framework import routers
 from rest_framework.authtoken import views
