@@ -12,3 +12,4 @@ whitenoise
 djangorestframework
 channels
 psycopg2
+sentry-sdk
