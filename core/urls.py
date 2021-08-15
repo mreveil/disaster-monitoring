@@ -7,6 +7,7 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf.urls.static import static
 from django.conf import settings
+from django.template import loader
 
 from rest_framework import routers
 from rest_framework.authtoken import views
@@ -16,6 +17,11 @@ from wagtail.core import urls as wagtail_urls
 from wagtail.documents import urls as wagtaildocs_urls
 
 import app.views as aviews
+
+
+def page_not_found_handler(request, exception=None):
+    html_template = loader.get_template("page-404.html")
+    return HttpResponse(html_template.render(context, request), status=404)
 
 
 router = routers.DefaultRouter()
@@ -40,3 +46,5 @@ urlpatterns = [
     path("", include("authentication.urls")),  # Auth routes - login / register
     path("", include("app.urls")),  # UI Kits Html files
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+handler404 = page_not_found_handler

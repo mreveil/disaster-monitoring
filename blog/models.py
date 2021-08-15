@@ -31,6 +31,7 @@ class BlogPage(Page):
     # Database fields
 
     body = RichTextField()
+    intro = models.CharField(max_length=250)
     date = models.DateField("Post date")
     feed_image = models.ForeignKey(
         "wagtailimages.Image",
@@ -51,6 +52,7 @@ class BlogPage(Page):
 
     content_panels = Page.content_panels + [
         FieldPanel("date"),
+        FieldPanel("intro"),
         FieldPanel("body", classname="full"),
         InlinePanel("related_links", label="Related links"),
     ]
