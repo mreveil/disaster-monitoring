@@ -25,6 +25,21 @@ class KeyValuePair(models.Model):
         return "%s: %s" % (self.key, self.value)
 
 
+<<<<<<< Updated upstream
+=======
+class Location(models.Model):
+    loc_type = models.CharField(max_length=25)
+    longitude = models.FloatField()
+    latitude = models.FloatField()
+    name = models.CharField(max_length=50)
+    alt_names = models.CharField(max_length=250)  # comma separated alternative names
+    description = models.CharField(max_length=250, default="", null=True)
+
+    def __str__(self):
+        return "%s %s %s" % (self.name, latitude, longitude)
+
+
+>>>>>>> Stashed changes
 class Report(models.Model):
     author = models.ForeignKey(Author, on_delete=models.SET_NULL, null=True)
     publication_time = models.DateTimeField()
