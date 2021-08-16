@@ -21,6 +21,7 @@ import app.views as aviews
 
 
 def page_not_found_handler(request, exception=None):
+    context = {}
     html_template = loader.get_template("page-404.html")
     return HttpResponse(html_template.render(context, request), status=404)
 
