@@ -55,6 +55,7 @@ INSTALLED_APPS = [
     "taggit",
     "app",  # Enable the inner app
     "blog",
+    "bootstrap_datepicker_plus",
 ]
 
 MIDDLEWARE = [
