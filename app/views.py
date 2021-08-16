@@ -35,11 +35,6 @@ def index(request):
     for key_value_pair in KeyValuePair.objects.all():
         context[key_value_pair.key] = key_value_pair.value
 
-    if "site_name" not in context:
-        raise ValueError(
-            "site_name is required. Please add it as a KeyValuePair before proceeding."
-        )
-
     context["data"] = reports
     context["GOOGLE_MAPS_API_KEY"] = config("GOOGLE_MAPS_API_KEY")
     html_template = loader.get_template("index.html")
