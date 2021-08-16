@@ -21,7 +21,7 @@ from app.serializers import (
     ReportSerializer,
     AuthorSerializer,
 )
-from app.models import Report, Author
+from app.models import Report, Author, KeyValuePair
 
 
 # @login_required(login_url="/login/")
@@ -32,7 +32,14 @@ def index(request):
     json_serializer = serializers.get_serializer("json")()
     reports = json_serializer.serialize(Report.objects.all(), ensure_ascii=False)
 
-    context = {}
+    for key_value_pair in KeyValuePair.objects.all():
+        context[key_value_pair.key] = key_value_pair.value
+
+    if "site_name" not in context:
+        raise ValueError(
+            "site_name is required. Please add it as a KeyValuePair before proceeding."
+        )
+
     context["data"] = reports
     context["GOOGLE_MAPS_API_KEY"] = config("GOOGLE_MAPS_API_KEY")
     html_template = loader.get_template("index.html")
@@ -45,6 +52,8 @@ def pages(request):
     # Pick out the html file name from the url. And load that template.
 
     context = {}
+    for key_value_pair in KeyValuePair.objects.all():
+        context[key_value_pair.key] = key_value_pair.value
 
     try:
 

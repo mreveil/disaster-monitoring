@@ -85,6 +85,7 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
+                "core.context_processors.access_site_name",
             ],
         },
     },
@@ -150,7 +151,7 @@ STATICFILES_DIRS = (os.path.join(CORE_DIR, "core/static"),)
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 MEDIA_URL = "/media/"
 
-WAGTAIL_SITE_NAME = "Haiti Earthquake Dashboard"
+WAGTAIL_SITE_NAME = "Blog"
 
 ####################################
 

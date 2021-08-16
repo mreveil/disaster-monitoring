@@ -17,6 +17,14 @@ class Author(models.Model):
         return "%s" % (self.name)
 
 
+class KeyValuePair(models.Model):
+    key = models.CharField(max_length=15)
+    value = models.CharField(max_length=50)
+
+    def __str__(self):
+        return "%s: %s" % (self.key, self.value)
+
+
 class Report(models.Model):
     author = models.ForeignKey(Author, on_delete=models.SET_NULL, null=True)
     publication_time = models.DateTimeField()
@@ -29,7 +37,6 @@ class Report(models.Model):
     embed_code = models.CharField(max_length=1000)
     # resolved = models.BooleanField(default=False)
     # dismissed = models.BooleanField(default=False)
-    # approved = models.BooleanField(default=True)
 
     class Meta:
         unique_together = ["pub_link"]
