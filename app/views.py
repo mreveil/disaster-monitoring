@@ -97,6 +97,7 @@ def process_tweet(pub_link, pub_datetime):
                     report_subtype="General",
                     title=None,
                     description=None,
+                    embed_code=embed_code,
                 )
                 print("Report created: ", rep)
                 msg = "Tweet added successfully"
