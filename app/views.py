@@ -21,9 +21,6 @@ from app.serializers import (
     ReportSerializer,
     AuthorSerializer,
 )
-<<<<<<< Updated upstream
-from app.models import Report, Author, KeyValuePair
-=======
 from app.models import Report, Author, KeyValuePair, Location
 from app.forms import SubmitReportForm
 
@@ -110,7 +107,6 @@ def process_tweet(pub_link, pub_datetime):
     else:
         msg = "Unable to retrieve this tweet. Please try again later."
     return msg, success
->>>>>>> Stashed changes
 
 
 # @login_required(login_url="/login/")
