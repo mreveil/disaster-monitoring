@@ -3,14 +3,18 @@
 Copyright (c) 2019 - present AppSeed.us
 """
 import json
+import requests
 
 from django.contrib.auth.decorators import login_required
+from django.contrib import messages
 from django.shortcuts import render, get_object_or_404, redirect
 from django.template import loader
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from django import template
 from django.contrib.auth.models import User, Group
 from django.core import serializers
+from django.db.models import Q
+from django.db.utils import IntegrityError
 
 from rest_framework import viewsets, permissions
 from decouple import config
@@ -112,6 +116,7 @@ def process_tweet(pub_link, pub_datetime):
 # @login_required(login_url="/login/")
 def index(request):
 
+    clean_form = False
     context = {}
     context["segment"] = "index"
     json_serializer = serializers.get_serializer("json")()
@@ -120,9 +125,32 @@ def index(request):
     for key_value_pair in KeyValuePair.objects.all():
         context[key_value_pair.key] = key_value_pair.value
 
+    if request.method == "POST":
+        # Create form instance
+        form = SubmitReportForm(request.POST)
+        clean_form = True
+        if form.is_valid():
+            msg, success = process_tweet(
+                form.cleaned_data["pub_link"], form.cleaned_data["pub_datetime"]
+            )
+            if success:
+                messages.success(request, msg)
+            else:
+                messages.error(request, msg)
+            print("This is the message: ", msg)
+        else:
+            messages.error(
+                request, "Invalid link. Only tweets can be submitted for now."
+            )
+    else:
+        form = SubmitReportForm()
+
+    context["form"] = form
     context["data"] = reports
     context["GOOGLE_MAPS_API_KEY"] = config("GOOGLE_MAPS_API_KEY")
     html_template = loader.get_template("index.html")
+    if clean_form:
+        return HttpResponseRedirect("/")
     return HttpResponse(html_template.render(context, request))
 
 

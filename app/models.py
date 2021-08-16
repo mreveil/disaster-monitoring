@@ -37,7 +37,7 @@ class Location(models.Model):
     description = models.CharField(max_length=250, default="", null=True)
 
     def __str__(self):
-        return "%s %s %s" % (self.name, latitude, longitude)
+        return "%s %s %s" % (self.name, self.latitude, self.longitude)
 
 
 class Report(models.Model):
