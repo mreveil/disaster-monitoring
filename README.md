@@ -25,7 +25,9 @@ To deploy, the following environment variables (or configVars on Heroku) are req
 - DEBUG
 - SECRET_KEY
 - SENTRY_DSN
-- SERVER
+- SERVER_1
+- SERVER_2
+- SERVER_3
 
 ### To run locally
 
@@ -37,6 +39,18 @@ python manage.py makemigrations
 python manage.py migrate
 python manage.py runserver
 ```
+
+### Admin Site
+
+Create a superuser
+
+`python manage.py createsuperuser`
+
+Use the Admin dashboard to add data.
+
+### Blog
+
+[TODO] Explain how to add blog entries
 
 ## Acknowledgement
 

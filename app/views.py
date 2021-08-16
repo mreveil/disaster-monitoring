@@ -2,23 +2,26 @@
 """
 Copyright (c) 2019 - present AppSeed.us
 """
+import json
 
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, get_object_or_404, redirect
 from django.template import loader
 from django.http import HttpResponse
 from django import template
+from django.contrib.auth.models import User, Group
+from django.core import serializers
+
+from rest_framework import viewsets, permissions
+from decouple import config
+
 from app.serializers import (
     UserSerializer,
     GroupSerializer,
     ReportSerializer,
     AuthorSerializer,
 )
-from rest_framework import viewsets, permissions
-from django.contrib.auth.models import User, Group
 from app.models import Report, Author
-from django.core import serializers
-import json
 
 
 # @login_required(login_url="/login/")
@@ -31,6 +34,7 @@ def index(request):
 
     context = {}
     context["data"] = reports
+    context["GOOGLE_MAPS_API_KEY"] = config("GOOGLE_MAPS_API_KEY")
     html_template = loader.get_template("index.html")
     return HttpResponse(html_template.render(context, request))
 
