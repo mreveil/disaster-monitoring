@@ -206,7 +206,11 @@ function initMap() {
     map.setCenter(marker.getPosition())
 
     var contentString = "";
-    for(const r of report.reportitems){
+    sorted_reports = report.reportitems.sort((a,b)=>{
+      return new Date(b.fields.publication_time) - new Date(a.fields.publication_time)
+    });
+    console.log("Sorted reports: ", sorted_reports);
+    for(const r of sorted_reports){
       const date_str = new Date(r.fields.publication_time).toLocaleString("en-GB", {
         day: "numeric",
         month: "short",
