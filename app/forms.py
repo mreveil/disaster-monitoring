@@ -40,7 +40,7 @@ class SubmitReportForm(forms.Form):
         data = self.cleaned_data["pub_datetime"]
 
         # Check if a date is before the earthquake.
-        if data < datetime.datetime(2021, 8, 14, 12, 20, tzinfo=datetime.timezone.utc):
+        if data < datetime.datetime(2021, 8, 14, 8, 20, tzinfo=datetime.timezone.utc):
             raise ValidationError(_("Invalid date - before the earthquake"))
 
         # Check if a date is in the allowed range (+4 weeks from today).

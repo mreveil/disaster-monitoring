@@ -5,6 +5,7 @@ Copyright (c) 2019 - present AppSeed.us
 import json
 import requests
 import unicodedata
+import datetime
 
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
@@ -95,7 +96,7 @@ def process_tweet(pub_link, pub_datetime):
             try:
                 rep = Report.objects.create(
                     author=author,
-                    publication_time=pub_datetime,
+                    publication_time=pub_datetime + datetime.timedelta(hours=4),
                     pub_link=pub_link,
                     location=city,
                     longitude=longitude,
