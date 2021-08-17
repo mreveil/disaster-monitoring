@@ -218,9 +218,7 @@ function initMap() {
         minute: "2-digit"
       });
       var contentString = contentString + '<div class="info-window-content"><h2>' +
-      date_str + " | " +
-      r.fields.report_type +'</h2>' +
-    '<h3>';
+      date_str + '</h2>' + '<h3>';
       if (r.fields.title !== null) {contentString += r.fields.title;}
       contentString += '</h3>' + r.fields.embed_code + '</div><br/>';
     }
