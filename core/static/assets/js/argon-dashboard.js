@@ -179,10 +179,8 @@ var $map = $('#map-canvas'),
 function initMap() {
 
   map = document.getElementById('map-canvas');
-  lat = 18.6390;//map.getAttribute('data-lat');
-  lng = -74.1181;//map.getAttribute('data-lng');
-
-  console.log("Initializing map...");
+  lat = 18.3677;//map.getAttribute('data-lat');
+  lng = -73.6058;//map.getAttribute('data-lng');
 
   var myLatlng = new google.maps.LatLng(lat, lng);
   var mapOptions = {

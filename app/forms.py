@@ -20,7 +20,7 @@ class SubmitReportForm(forms.Form):
 
     pub_datetime = forms.DateTimeField(
         widget=DateTimePickerInput(
-            format="%d %b %Y %I:%M %p",
+            # format="%m/%d/%Y %I:%M %p",
             attrs={"placeholder": "Enter the tweet date and time"},
         ),
         help_text="Enter the date and time when this tweet was published.).",
@@ -29,8 +29,7 @@ class SubmitReportForm(forms.Form):
     def clean_pub_link(self):
         data = self.cleaned_data["pub_link"]
 
-        if "twitter.com" not in data:
-            print("Error found")
+        if not data.startswith("https://twitter.com"):
             raise ValidationError(
                 _("Invalid link. Only tweets can be reported for now.")
             )
@@ -39,7 +38,6 @@ class SubmitReportForm(forms.Form):
 
     def clean_pub_datetime(self):
         data = self.cleaned_data["pub_datetime"]
-
         # Check if a date is before the earthquake.
         if data < datetime.datetime(2021, 8, 14, 8, 20, tzinfo=datetime.timezone.utc):
             raise ValidationError(_("Invalid date - before the earthquake"))

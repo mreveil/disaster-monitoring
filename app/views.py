@@ -136,6 +136,7 @@ def index(request):
         # Create form instance
         form = SubmitReportForm(request.POST)
         clean_form = True
+
         if form.is_valid():
             msg, success = process_tweet(
                 form.cleaned_data["pub_link"], form.cleaned_data["pub_datetime"]
