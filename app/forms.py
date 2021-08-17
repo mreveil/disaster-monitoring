@@ -20,7 +20,8 @@ class SubmitReportForm(forms.Form):
 
     pub_datetime = forms.DateTimeField(
         widget=DateTimePickerInput(
-            attrs={"placeholder": "Enter the tweet date and time"}
+            format="%d %b %Y %I:%M %p",
+            attrs={"placeholder": "Enter the tweet date and time"},
         ),
         help_text="Enter the date and time when this tweet was published.).",
     )
