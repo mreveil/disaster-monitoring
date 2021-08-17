@@ -16,6 +16,7 @@
 
 */
 
+// Get list of reports
 var reports = document.querySelector("#jsonData").getAttribute('data-json');
 var nreports = 0;
 try{
@@ -25,6 +26,33 @@ try{
   console.error("Unable to load reports. Error: ", err);
   reports = [];
 }
+
+// Group reports by location TODO: Reimplement without the nested for loops
+
+var grouped_reports = [];
+for (var i=0;i<reports.length;i++){
+  var r = reports[i];
+  var found = false;
+  for(var j=0;j<grouped_reports.length;j++){
+    var nr = grouped_reports[j];
+    if(nr.reportitems[0].fields.longitude == r.fields.longitude && nr.reportitems[0].fields.latitude == r.fields.latitude){
+      found = true;
+      nr.reportitems.push(r);
+    }
+  }
+  if(!found){
+    var nr = {
+      location: ""
+      ,reportitems :[]
+    }
+    nr.reportitems.push(r);
+    grouped_reports.push(nr);
+  }
+
+}
+
+// Update number of reports on the dashboard
+
 help_needed_el = document.getElementById("nreports")
 help_needed_el.innerHTML = nreports;
 //
@@ -162,93 +190,48 @@ function initMap() {
     scrollwheel: false,
     center: myLatlng,
     mapTypeId: google.maps.MapTypeId.ROADMAP,
-    // styles: [{
-    //   "featureType": "administrative",
-    //   "elementType": "labels.text.fill",
-    //   "stylers": [{
-    //     "color": "#444444"
-    //   }]
-    // }, {
-    //   "featureType": "landscape",
-    //   "elementType": "all",
-    //   "stylers": [{
-    //     "color": "#f2f2f2"
-    //   }]
-    // }, {
-    //   "featureType": "poi",
-    //   "elementType": "all",
-    //   "stylers": [{
-    //     "visibility": "off"
-    //   }]
-    // }, {
-    //   "featureType": "road",
-    //   "elementType": "all",
-    //   "stylers": [{
-    //     "saturation": -100
-    //   }, {
-    //     "lightness": 45
-    //   }]
-    // }, {
-    //   "featureType": "road.highway",
-    //   "elementType": "all",
-    //   "stylers": [{
-    //     "visibility": "simplified"
-    //   }]
-    // }, {
-    //   "featureType": "road.arterial",
-    //   "elementType": "labels.icon",
-    //   "stylers": [{
-    //     "visibility": "off"
-    //   }]
-    // }, {
-    //   "featureType": "transit",
-    //   "elementType": "all",
-    //   "stylers": [{
-    //     "visibility": "off"
-    //   }]
-    // }, {
-    //   "featureType": "water",
-    //   "elementType": "all",
-    //   "stylers": [{
-    //     "color": color
-    //   }, {
-    //     "visibility": "on"
-    //   }]
-    // }]
+
   }
 
   map = new google.maps.Map(map, mapOptions);
   var marker, openInfoWindow;
-  for (const report of reports){
-    var myLatlng = new google.maps.LatLng(report.fields.latitude, report.fields.longitude);
+  for (const report of grouped_reports ){
+    var myLatlng = new google.maps.LatLng(report.reportitems[0].fields.latitude, report.reportitems[0].fields.longitude);
     marker = new google.maps.Marker({
       position: myLatlng,
       map: map,
       animation: google.maps.Animation.DROP,
-      title: report.fields.report_type
+      title: report.location
     });
     map.setCenter(marker.getPosition())
-    const date_str = new Date(report.fields.publication_time).toLocaleString("en-GB", {
-      day: "numeric",
-      month: "short",
-      year: "numeric",
-      hour: "numeric",
-      minute: "2-digit"
-    });
-    var contentString = '<div class="info-window-content"><h2>' +
-                        date_str + " | " +
-                        report.fields.report_type +'</h2>' +
-                      '<h3>' + report.fields.title + '</h3>' + report.fields.embed_code + '</div>';
+
+    var contentString = "";
+    for(const r of report.reportitems){
+      const date_str = new Date(r.fields.publication_time).toLocaleString("en-GB", {
+        day: "numeric",
+        month: "short",
+        year: "numeric",
+        hour: "numeric",
+        minute: "2-digit"
+      });
+      var contentString = contentString + '<div class="info-window-content"><h2>' +
+      date_str + " | " +
+      r.fields.report_type +'</h2>' +
+    '<h3>';
+      if (r.fields.title !== null) {contentString += r.fields.title;}
+      contentString += '</h3>' + r.fields.embed_code + '</div><br/>';
+    }
 
     var infowindow = new google.maps.InfoWindow({
-      content: contentString
+      content:  '<div class="scrollFix">' + contentString + '</div>',
+      maxWidth: 600
     });
 
     google.maps.event.addListener(marker,'click', (function(marker,contentString,infowindow){
       return function() {
           if (openInfoWindow)
             openInfoWindow.close();
-          infowindow.setContent(contentString);
+          infowindow.setContent('<div class="scrollFix">' + contentString + '</div>');
           openInfoWindow = infowindow;
           infowindow.open(map,marker);
       };

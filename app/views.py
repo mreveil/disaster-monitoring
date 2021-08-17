@@ -4,6 +4,7 @@ Copyright (c) 2019 - present AppSeed.us
 """
 import json
 import requests
+import unicodedata
 
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
@@ -31,14 +32,21 @@ from app.forms import SubmitReportForm
 twitter_oembed_url = "https://publish.twitter.com/oembed?url="
 
 
+def compare_strs(s1, s2):
+    def NFD(s):
+        return unicodedata.normalize("NFD", s)
+
+    return NFD(s1) in NFD(s2)
+
+
 def find_matching_locations(text, location_list):
     matching_locations = []
     for loc in location_list:
-        if loc.name.lower() in text.lower():
+        if compare_strs(loc.name.casefold(), text.casefold()):
             matching_locations.append(loc)
         else:
             for other_name in loc.alt_names.split(","):
-                if other_name.lower() in text.lower():
+                if compare_strs(other_name.casefold(), text.casefold()):
                     matching_locations.append(loc)
                     break
 
@@ -79,7 +87,6 @@ def process_tweet(pub_link, pub_datetime):
         city = identify_city(embed_code)
         location = identify_specific_location(embed_code)
         if city is not None:
-            print("location pk and name: ", city.pk, city)
             longitude = city.longitude
             latitude = city.latitude
             if location is not None:
@@ -99,12 +106,10 @@ def process_tweet(pub_link, pub_datetime):
                     description=None,
                     embed_code=embed_code,
                 )
-                print("Report created: ", rep)
                 msg = "Tweet added successfully"
                 success = True
             except IntegrityError:
                 msg = "Tweet has already been added. Please add a new one."
-                print("We are here")
                 success = False
         else:  # Ask user to submit coordinates and save with require approval flag
             msg = "Unable to extract a location from this tweet. Please try a different one."
@@ -138,7 +143,6 @@ def index(request):
                 messages.success(request, msg)
             else:
                 messages.error(request, msg)
-            print("This is the message: ", msg)
         else:
             messages.error(
                 request, "Invalid link. Only tweets can be submitted for now."
