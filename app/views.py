@@ -87,33 +87,38 @@ def process_tweet(pub_link, pub_datetime):
         )
         city = identify_city(embed_code)
         location = identify_specific_location(embed_code)
+
         if city is not None:
             longitude = city.longitude
             latitude = city.latitude
-            if location is not None:
+            if location is not None:  # Use the specific location for long and lat
                 longitude = location.longitude
                 latitude = location.latitude
-            try:
-                rep = Report.objects.create(
-                    author=author,
-                    publication_time=pub_datetime + datetime.timedelta(hours=4),
-                    pub_link=pub_link,
-                    location=city,
-                    longitude=longitude,
-                    latitude=latitude,
-                    report_type="Help Needed",
-                    report_subtype="General",
-                    title=None,
-                    description=None,
-                    embed_code=embed_code,
-                )
-                msg = "Tweet added successfully"
-                success = True
-            except IntegrityError:
-                msg = "Tweet has already been added. Please add a new one."
-                success = False
-        else:  # Ask user to submit coordinates and save with require approval flag
-            msg = "Unable to extract a location from this tweet. Please try a different one."
+            msg = "Tweet added successfully"
+            require_review = False
+        else:
+            longitude, latitude = None, None
+            msg = "Unable to extract a location from this tweet. It is saved for manual review."
+            require_review = True
+        try:
+            rep = Report.objects.create(
+                author=author,
+                publication_time=pub_datetime + datetime.timedelta(hours=4),
+                pub_link=pub_link,
+                location=city,
+                longitude=longitude,
+                latitude=latitude,
+                report_type="Help Needed",
+                report_subtype="General",
+                title=None,
+                description=None,
+                require_review=require_review,
+                embed_code=embed_code,
+            )
+            success = True
+        except IntegrityError:
+            msg = "Tweet has already been added. Please add a new one."
+            success = False
 
     else:
         msg = "Unable to retrieve this tweet. Please try again later."
@@ -127,7 +132,12 @@ def index(request):
     context = {}
     context["segment"] = "index"
     json_serializer = serializers.get_serializer("json")()
-    reports = json_serializer.serialize(Report.objects.all(), ensure_ascii=False)
+    reports = json_serializer.serialize(
+        Report.objects.filter(
+            longitude__isnull=False, dismissed=False, require_review=False
+        ),
+        ensure_ascii=False,
+    )
 
     for key_value_pair in KeyValuePair.objects.all():
         context[key_value_pair.key] = key_value_pair.value
@@ -146,6 +156,7 @@ def index(request):
             else:
                 messages.error(request, msg)
         else:
+            print("The form is not valid.")
             messages.error(
                 request, "Invalid link. Only tweets can be submitted for now."
             )

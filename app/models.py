@@ -9,9 +9,9 @@ from django.contrib.auth.models import User
 
 class Author(models.Model):
     name = models.CharField(max_length=50)
-    affiliation = models.CharField(max_length=50)
+    affiliation = models.CharField(max_length=50, blank=True, null=True)
     profile_link = models.CharField(max_length=250)
-    affiliation_link = models.CharField(max_length=250)
+    affiliation_link = models.CharField(max_length=250, blank=True, null=True)
 
     def __str__(self):
         return "%s" % (self.name)
@@ -45,8 +45,8 @@ class Report(models.Model):
     publication_time = models.DateTimeField()
     pub_link = models.CharField(max_length=250)
     title = models.CharField(max_length=100, null=True)
-    longitude = models.FloatField()
-    latitude = models.FloatField()
+    longitude = models.FloatField(null=True)
+    latitude = models.FloatField(null=True)
     report_type = models.CharField(
         max_length=25, default="Help Needed"
     )  # Relief or Help Needed
@@ -58,12 +58,16 @@ class Report(models.Model):
     resolved = models.BooleanField(default=False)
     dismissed = models.BooleanField(default=False)
     require_review = models.BooleanField(default=False)
-    description = models.CharField(max_length=250, null=True)
+    description = models.CharField(max_length=250, null=True, blank=True)
     location = models.ForeignKey(Location, on_delete=models.SET_NULL, null=True)
 
     class Meta:
         unique_together = ["pub_link"]
 
     def __str__(self):
-        return "%s" % (self.title)
+        return "%s: %s (Requires Review: %s)" % (
+            self.author.name,
+            self.pub_link,
+            self.require_review,
+        )
 
