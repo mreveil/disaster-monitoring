@@ -88,18 +88,20 @@ def process_tweet(pub_link, pub_datetime):
         city = identify_city(embed_code)
         location = identify_specific_location(embed_code)
 
-        if city is not None:
-            longitude = city.longitude
-            latitude = city.latitude
-            if location is not None:  # Use the specific location for long and lat
-                longitude = location.longitude
-                latitude = location.latitude
-            msg = "Tweet added successfully"
-            require_review = False
-        else:
+        if city is None and location is None:
             longitude, latitude = None, None
             msg = "Unable to extract a location from this tweet. It is saved for manual review."
             require_review = True
+        else:
+            if location is not None:  # Use the specific location for long and lat
+                longitude = location.longitude
+                latitude = location.latitude
+            else:
+                longitude = city.longitude
+                latitude = city.latitude
+            msg = "Tweet added successfully"
+            require_review = False
+
         try:
             rep = Report.objects.create(
                 author=author,
