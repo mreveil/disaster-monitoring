@@ -27,7 +27,7 @@ from app.serializers import (
     ReportSerializer,
     AuthorSerializer,
 )
-from app.models import Report, Author, KeyValuePair, Location
+from app.models import Report, Author, KeyValuePair, Location, MediaCoverage
 from app.forms import SubmitReportForm
 
 twitter_oembed_url = "https://publish.twitter.com/oembed?url="
@@ -142,7 +142,9 @@ def index(request):
     )
 
     for key_value_pair in KeyValuePair.objects.all():
-        context[key_value_pair.key] = key_value_pair.value
+        context[key_value_pair.key + "_value"] = key_value_pair.value
+        context[key_value_pair.key + "_last_updated"] = key_value_pair.last_updated
+        context[key_value_pair.key + "_change"] = key_value_pair.change
 
     if request.method == "POST":
         # Create form instance
@@ -200,6 +202,19 @@ def pages(request):
 
         html_template = loader.get_template("page-500.html")
         return HttpResponse(html_template.render(context, request))
+
+
+def mediacoverage(request):
+    # All resource paths end in .html.
+    # Pick out the html file name from the url. And load that template.
+
+    context = {}
+
+    news_articles = MediaCoverage.objects.all()
+    context["articles"] = news_articles
+
+    html_template = loader.get_template("page-404.html")
+    return HttpResponse(html_template.render(context, request))
 
 
 class UserViewSet(viewsets.ModelViewSet):
