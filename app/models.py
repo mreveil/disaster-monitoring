@@ -5,6 +5,7 @@ Copyright (c) 2019 - present AppSeed.us
 
 from django.db import models
 from django.contrib.auth.models import User
+from datetime import datetime
 
 
 class Author(models.Model):
@@ -20,9 +21,17 @@ class Author(models.Model):
         unique_together = ["profile_link"]
 
 
+class MediaCoverage(models.Model):
+    media_name = models.CharField(max_length=50)
+    pub_link = models.CharField(max_length=250)
+    pub_time = models.DateTimeField()
+    author = models.ForeignKey(Author, on_delete=models.SET_NULL, null=True)
+
+
 class KeyValuePair(models.Model):
     key = models.CharField(max_length=15)
     value = models.CharField(max_length=50)
+    last_updated = models.DateTimeField(default=datetime.now)
 
     def __str__(self):
         return "%s: %s" % (self.key, self.value)
