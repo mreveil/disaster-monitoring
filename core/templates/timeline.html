@@ -1,0 +1,61 @@
+{% extends 'layouts/base.html' %}
+
+{% block title %} Maps {% endblock title %}
+
+{% block content %}
+
+    <!-- Header -->
+    <div class="header bg-gradient-primary pb-8 pt-5 pt-md-8">
+      <div class="container-fluid">
+        <div style="text-align: center; color: white;">
+          <h1 style="color: white;">Timeline</h1>
+          <div  class="intro">List of key events and developments</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container-fluid mt-2">
+
+      <div class="timeline">
+        <div class="container">
+          <div class="row">
+            <div class="col-lg-12">
+              <div class="timeline-container">
+                <div class="timeline-end">
+                  <p>Now</p>
+                </div>
+                <div class="timeline-continue">
+
+                  {% for event in key_events %}
+                    {% if forloop.counter|divisibleby:2 %}
+                        {% include 'includes/timeline_right_card.html' with heading=event.title date=event.pub_time body=event.embed_code %}
+                    {% else %}
+                        {% include 'includes/timeline_left_card.html'  with heading=event.title date=event.pub_time body=event.embed_code %}
+                    {% endif %}
+                  {% endfor %}
+                 </div>
+                <div class="timeline-start">
+                  <p>Start</p>
+                </div>
+                <div class="timeline-launch">
+                  <div class="timeline-box">
+                    <div class="timeline-text">
+                      <h3>{{site_name}}</h3>
+                      <p>Natural disaster occurs on Aug 14 at 8:23 AM </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {% include "includes/footer.html" %}
+
+    </div>
+
+{% endblock content %}
+
+<!-- Specific JS goes HERE -->
+{% block javascripts %}{% endblock javascripts %}
