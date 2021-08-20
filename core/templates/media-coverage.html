@@ -9,20 +9,26 @@
       <div class="container-fluid">
         <div style="text-align: center; color: white;">
           <h1 style="color: white;">Media Coverage</h1>
-          <div  class="intro">Collection of media reports about the earthquake</div>
+          <div  class="intro">Collection of media reports</div>
         </div>
       </div>
     </div>
 
-    <div class="container-fluid mt--7">
-
+    <div class="container-fluid mt-4">
+      {% for article in articles %}
       <div class="row">
-        <div class="col">
-          <div class="card shadow border-0">
+        <a href="{{article.pub_link}}" class="text-dark">
+          <div class="col ">
+            <div class="card shadow border-0 pt-2 px-4">
+              <smal>{{article.pub_time}}</smal>
+              <h1>{{article.media_name}} - {{article.title}}</h1>
+              <h3>{{article.authors}}</h3>
+              <p>{{article.description}}</p>
+            </div>
           </div>
-        </div>
+        </a>
       </div>
-
+      {% endfor %}
       {% include "includes/footer.html" %}
 
     </div>

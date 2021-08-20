@@ -25,10 +25,10 @@ class MediaCoverage(models.Model):
     media_name = models.CharField(max_length=50)
     pub_link = models.CharField(max_length=250)
     pub_time = models.DateTimeField()
-    author = models.ForeignKey(Author, on_delete=models.SET_NULL, null=True)
+    authors = models.CharField(max_length=250)
     title = models.CharField(max_length=100, default="")
     description = models.CharField(max_length=500, default="")
-    image = models.ImageField(default=None, null=True)
+    image = models.ImageField(default=None, null=True, blank=True)
 
 
 class KeyEvent(models.Model):
