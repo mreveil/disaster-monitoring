@@ -197,7 +197,7 @@ def pages(request):
             context["articles"] = news_articles
 
         if load_template == "timeline.html":
-            key_events = KeyEvent.objects.all()
+            key_events = KeyEvent.objects.all().order_by("-pub_time")
             context["key_events"] = key_events
             print("Key events are: ", key_events)
 
