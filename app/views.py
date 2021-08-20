@@ -27,7 +27,7 @@ from app.serializers import (
     ReportSerializer,
     AuthorSerializer,
 )
-from app.models import Report, Author, KeyValuePair, Location
+from app.models import Report, Author, KeyValuePair, Location, MediaCoverage, KeyEvent
 from app.forms import SubmitReportForm
 
 twitter_oembed_url = "https://publish.twitter.com/oembed?url="
@@ -142,7 +142,9 @@ def index(request):
     )
 
     for key_value_pair in KeyValuePair.objects.all():
-        context[key_value_pair.key] = key_value_pair.value
+        context[key_value_pair.key + "_value"] = key_value_pair.value
+        context[key_value_pair.key + "_last_updated"] = key_value_pair.last_updated
+        context[key_value_pair.key + "_change"] = key_value_pair.change
 
     if request.method == "POST":
         # Create form instance
@@ -187,6 +189,17 @@ def pages(request):
 
         load_template = request.path.split("/")[-1]
         context["segment"] = load_template
+
+        print("segment is:", load_template)
+
+        if load_template == "media-coverage.html":
+            news_articles = MediaCoverage.objects.all()
+            context["articles"] = news_articles
+
+        if load_template == "timeline.html":
+            key_events = KeyEvent.objects.all().order_by("-pub_time")
+            context["key_events"] = key_events
+            print("Key events are: ", key_events)
 
         html_template = loader.get_template(load_template)
         return HttpResponse(html_template.render(context, request))

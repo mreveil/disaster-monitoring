@@ -1,0 +1,39 @@
+{% extends 'layouts/base.html' %}
+
+{% block title %} Maps {% endblock title %}
+
+{% block content %}
+
+    <!-- Header -->
+    <div class="header bg-gradient-primary pb-8 pt-5 pt-md-8">
+      <div class="container-fluid">
+        <div style="text-align: center; color: white;">
+          <h1 style="color: white;">Media Coverage</h1>
+          <div  class="intro">Collection of media reports</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container-fluid mt-4">
+      {% for article in articles %}
+      <div class="row">
+        <a href="{{article.pub_link}}" class="text-dark">
+          <div class="col ">
+            <div class="card shadow border-0 pt-2 px-4">
+              <smal>{{article.pub_time}}</smal>
+              <h1>{{article.media_name}} - {{article.title}}</h1>
+              <h3>{{article.authors}}</h3>
+              <p>{{article.description}}</p>
+            </div>
+          </div>
+        </a>
+      </div>
+      {% endfor %}
+      {% include "includes/footer.html" %}
+
+    </div>
+
+{% endblock content %}
+
+<!-- Specific JS goes HERE -->
+{% block javascripts %}{% endblock javascripts %}

@@ -199,9 +199,9 @@ function initMap() {
       position: myLatlng,
       map: map,
       animation: google.maps.Animation.DROP,
-      title: report.location
+      label: report.reportitems.length.toString()
     });
-    map.setCenter(marker.getPosition())
+    // map.setCenter(marker.getPosition())
 
     var contentString = "";
     sorted_reports = report.reportitems.sort((a,b)=>{
@@ -234,7 +234,7 @@ function initMap() {
           openInfoWindow = infowindow;
           infowindow.open(map,marker);
       };
-  })(marker,contentString,infowindow));
+    })(marker,contentString,infowindow));
   }
 
 }

@@ -5,6 +5,7 @@ Copyright (c) 2019 - present AppSeed.us
 
 from django.db import models
 from django.contrib.auth.models import User
+from datetime import datetime
 
 
 class Author(models.Model):
@@ -20,9 +21,30 @@ class Author(models.Model):
         unique_together = ["profile_link"]
 
 
+class MediaCoverage(models.Model):
+    media_name = models.CharField(max_length=50)
+    pub_link = models.CharField(max_length=250)
+    pub_time = models.DateTimeField()
+    authors = models.CharField(max_length=250)
+    title = models.CharField(max_length=100, default="")
+    description = models.CharField(max_length=500, default="")
+    image = models.ImageField(default=None, null=True, blank=True)
+
+
+class KeyEvent(models.Model):
+    author = models.ForeignKey(Author, on_delete=models.SET_NULL, null=True)
+    pub_time = models.DateTimeField()
+    pub_link = models.CharField(max_length=250)
+    title = models.CharField(max_length=100, null=True)
+    embed_code = models.CharField(max_length=1000)
+    description = models.CharField(max_length=250, null=True, blank=True)
+
+
 class KeyValuePair(models.Model):
     key = models.CharField(max_length=15)
     value = models.CharField(max_length=50)
+    last_updated = models.DateTimeField(default=datetime.now)
+    change = models.IntegerField(default=0)
 
     def __str__(self):
         return "%s: %s" % (self.key, self.value)
