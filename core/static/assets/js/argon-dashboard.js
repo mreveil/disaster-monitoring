@@ -223,7 +223,7 @@ function initMap() {
 
     var infowindow = new google.maps.InfoWindow({
       content:  '<div class="scrollFix">' + contentString + '</div>',
-      maxWidth: 600
+      maxWidth: 800
     });
 
     google.maps.event.addListener(marker,'click', (function(marker,contentString,infowindow){
