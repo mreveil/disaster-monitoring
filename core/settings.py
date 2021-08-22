@@ -56,6 +56,7 @@ INSTALLED_APPS = [
     "app",  # Enable the inner app
     "blog",
     "bootstrap_datepicker_plus",
+    "django_tables2",
 ]
 
 MIDDLEWARE = [

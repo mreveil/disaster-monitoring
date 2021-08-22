@@ -20,6 +20,8 @@ from django.db.utils import IntegrityError
 
 from rest_framework import viewsets, permissions
 from decouple import config
+import django_tables2 as tables
+
 
 from app.serializers import (
     UserSerializer,
@@ -127,6 +129,22 @@ def process_tweet(pub_link, pub_datetime):
     return msg, success
 
 
+class ReportTable(tables.Table):
+    id = tables.Column(
+        attrs={"th": {"scope": "col", "class": "sort"}, "td": {"class": "my-class"},}
+    )
+    # age = tables.Column()
+
+    class Meta:
+        model = Report
+        attrs = {
+            "class": "table align-items-center",
+            "thead": {"class": "thead-light"},
+            "tbody": {"class": "list"},
+        }
+        template_name = "includes/table.html"
+
+
 # @login_required(login_url="/login/")
 def index(request):
 
@@ -134,12 +152,15 @@ def index(request):
     context = {}
     context["segment"] = "index"
     json_serializer = serializers.get_serializer("json")()
-    reports = json_serializer.serialize(
-        Report.objects.filter(
-            longitude__isnull=False, dismissed=False, require_review=False
-        ),
-        ensure_ascii=False,
+    reports = Report.objects.filter(
+        longitude__isnull=False, dismissed=False, require_review=False
+    ).order_by("-publication_time")
+    reports_json = json_serializer.serialize(reports, ensure_ascii=False,)
+    reports_table = ReportTable(reports)
+    tables.config.RequestConfig(request, paginate={"per_page": 10}).configure(
+        reports_table
     )
+    # reports_table.paginate(page=request.GET.get("page", 1), per_page=10)
 
     for key_value_pair in KeyValuePair.objects.all():
         context[key_value_pair.key + "_value"] = key_value_pair.value
@@ -168,7 +189,9 @@ def index(request):
         form = SubmitReportForm()
 
     context["form"] = form
-    context["data"] = reports
+    context["data"] = reports_json
+    # context["table"] = reports_table
+    context["reports"] = reports
     context["GOOGLE_MAPS_API_KEY"] = config("GOOGLE_MAPS_API_KEY")
     html_template = loader.get_template("index.html")
     if clean_form:

@@ -4512,7 +4512,7 @@ input[type="button"].btn-block {
   color: #8898aa;
 }
 
-.nav-tabs {
+/* .nav-tabs {
   border-bottom: 1px solid #dee2e6;
 }
 
@@ -4548,7 +4548,7 @@ input[type="button"].btn-block {
   margin-top: -1px;
   border-top-left-radius: 0;
   border-top-right-radius: 0;
-}
+} */
 
 .nav-pills .nav-link {
   border-radius: 0.375rem;

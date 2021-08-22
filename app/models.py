@@ -42,10 +42,23 @@ class Location(models.Model):
         return "%s %s %s" % (self.name, self.latitude, self.longitude)
 
 
-class Aid(models.Model):
+class Relief(models.Model):
     institution = models.ForeignKey(Institution, on_delete=models.SET_NULL, null=True)
     item_type = models.CharField(max_length=50)
+    item_subtype = models.CharField(max_length=50)
     quantity = models.IntegerField(default=0)
+    unit = models.CharField(max_length=50)
+    status = models.CharField(max_length=50)
+    pub_link = models.CharField(max_length=250)
+    embed_code = models.CharField(max_length=1500)
+    target_location = models.ForeignKey(Location, on_delete=models.SET_NULL, null=True)
+
+
+class Fundraiser(models.Model):
+    institution = models.ForeignKey(Institution, on_delete=models.SET_NULL, null=True)
+    description = models.CharField(max_length=250)
+    title = models.CharField(max_length=100)
+    goal = models.IntegerField(default=0)
     unit = models.CharField(max_length=50)
     status = models.CharField(max_length=50)
     pub_link = models.CharField(max_length=250)

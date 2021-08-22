@@ -5,11 +5,10 @@
 <!-- Specific CSS goes HERE -->
 {% block stylesheets %}{% endblock stylesheets %}
 
-
 {% block content %}
 
     <!-- Header -->
-    <div class="header bg-gradient-primary pb-8 pt-4 pt-md-5">
+    <div class="header bg-gradient-primary pb-0 pt-4 pt-md-5">
       <div class="container-fluid">
         <div class="header-body">
           <!-- Card stats -->
@@ -35,7 +34,7 @@
                     {% else %}
                     <span class="text-success mr-2"><i class="fas fa-arrow-up"></i> {{missing_change}}</span>
                     {% endif %}
-                    <span class="text-nowrap">Last updated on {{missing_last_updated}}</span>
+                    <span class="text-nowrap">Updated on {{missing_last_updated}}</span>
                   </p>
                 </div>
               </div>
@@ -60,7 +59,7 @@
                     {% else %}
                     <span class="text-success mr-2"><i class="fas fa-arrow-up"></i> {{injured_change}}</span>
                     {% endif %}
-                    <span class="text-nowrap">Last updated on {{injured_last_updated}}</span>
+                    <span class="text-nowrap">Updated on {{injured_last_updated}}</span>
                   </p>
                 </div>
               </div>
@@ -85,7 +84,7 @@
                     {% else %}
                     <span class="text-success mr-2"><i class="fas fa-arrow-up"></i> {{deceased_change}}</span>
                     {% endif %}
-                    <span class="text-nowrap">Last updated on {{deceased_last_updated}}</span>
+                    <span class="text-nowrap">Updated on {{deceased_last_updated}}</span>
                   </p>
                 </div>
               </div>
@@ -117,7 +116,9 @@
             </div>
           </div>
 
-          <div class="container pb-5 mt-4">
+          <hr>
+
+          <div class="container pb-5 mt-0">
             <div class="row justify-content-center">
               <div class="col-lg-10 col-md-10">
                 <div class=" shadow border-0">
@@ -165,16 +166,55 @@
       </div>
     </div>
 
-    <div class="container-fluid mt--9">
-
-
-      <div class="row">
-        <div class="col">
-          <div class="card shadow border-0">
-            <div id="map-canvas" class="map-canvas" style="height: 600px;"></div>
+    <div class="container-fluid" >
+      <!-- mt--9"> -->
+      <div class="nav-wrapper">
+        <ul class="nav nav-pills nav-fill flex-column flex-md-row" role="tablist">
+          <li class="nav-item" role="presentation" >
+            <a class="nav-link mb-sm-3 mb-md-0 active"  href="#map" aria-controls="map" role="tab" data-toggle="tab">Map</a>
+          </li>
+          <li class="nav-item" role="presentation">
+            <a class="nav-link mb-sm-3 mb-md-0"  href="#cards" aria-controls="cards" role="tab" data-toggle="tab">Cards</a>
+          </li>
+        </ul>
+      </div>
+        <!-- Tab panes -->
+    <div class="tab-content">
+      <div role="tabpanel" class="tab-pane active" id="map">
+        <div class="row">
+          <div class="col">
+            <div class="card shadow border-0">
+              <div id="map-canvas" class="map-canvas" style="height: 600px;"></div>
+            </div>
           </div>
         </div>
       </div>
+
+      <div role="tabpanel" class="tab-pane  justify-content-center" id="cards">
+        <div class="row  justify-content-center">
+          <div class="col-lg-10 col-md-10">
+            <div class=" shadow border-0">
+              <div class="form-group">
+                <input  class="input-group form-control input-group-alternative text-primary" type="text" id="myInput" onkeyup="filterTweets()" placeholder="Filter data (e.g. Les Cayes)...">
+              </div>
+            </div>
+          </div>
+        </div>
+        <div id="totalReports" class="row  justify-content-center">
+          Total Reports: {{reports | length}}
+        </div>
+        <div  id="tweet-cards" class="card-columns justify-content-center">
+          {% for report in reports %}
+          <div  class="card embed-responsive bg-transparent border-0 clearfix" id="tweet-card">
+            {{report.embed_code | safe}}
+            <div style="display: none" class="tweetdata">{{report.embed_code}}</div>
+          </div>
+          {% endfor %}
+        </div>
+
+    </div>
+
+
 
       {% include "includes/footer.html" %}
 
@@ -184,4 +224,29 @@
 {% endblock content %}
 
 <!-- Specific JS goes HERE -->
-{% block javascripts %}{% endblock javascripts %}
+{% block javascripts %}
+<script>
+function filterTweets() {
+  // Declare variables
+  var input, filter, cardsdiv, cards, txt, i, txtValue, totalElem, totalReports;
+  input = document.getElementById('myInput');
+  filter = input.value.toUpperCase();
+  cardsdiv = document.getElementById("tweet-cards");
+  cards = cardsdiv.getElementsByClassName('card');
+  totalElem = document.getElementById("totalReports");
+  totalReports = 0;
+  // Loop through all list items, and hide those who don't match the search query
+  for (i = 0; i < cards.length; i++) {
+    txt = cards[i].getElementsByClassName("tweetdata")[0];
+    txtValue = txt.textContent || txt.innerText;
+    if (txtValue.toUpperCase().indexOf(filter) > -1) {
+      cards[i].style.display = "";
+      totalReports++;
+    } else {
+      cards[i].style.display = "none";
+    }
+  }
+  totalElem.innerText = "Total Reports: " + totalReports.toString()
+}
+</script>
+{% endblock javascripts %}
