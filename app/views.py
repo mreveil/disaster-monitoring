@@ -115,11 +115,13 @@ def pages(request):
             context["key_events"] = key_events
 
         elif load_template == "relief-data.html":
-            reliefs_table = ReliefTable(Relief.objects.all())
+            reliefs = Relief.objects.all()
+            reliefs_table = ReliefTable(reliefs)
             djtables.config.RequestConfig(request, paginate={"per_page": 3}).configure(
                 reliefs_table
             )
             context["table"] = reliefs_table
+            context["data"] = reliefs
 
         html_template = loader.get_template(load_template)
         return HttpResponse(html_template.render(context, request))

@@ -1,6 +1,7 @@
 {% extends 'layouts/base.html' %}
 {% load render_table from django_tables2 %}
 {% load bootstrap3 %}
+{% load humanize %}
 {% block title %} Dashboard {% endblock title %}
 
 <!-- Specific CSS goes HERE -->
@@ -12,7 +13,7 @@
     <div class="header bg-gradient-primary pb-8 pt-5 pt-md-8">
         <div class="container-fluid">
           <div style="text-align: center; color: white;">
-            <h1 style="color: white;">Relief Data</h1>
+            <h1 style="color: white;">Relief Data  <span class="badge badge-md badge-floating badge-primary border-white">New</span></h1>
             <div  class="intro"></div>
           </div>
         </div>
@@ -26,7 +27,7 @@
             <a class="nav-link mb-sm-3 mb-md-0 active"  href="#table" aria-controls="table" role="tab" data-toggle="tab">Table</a>
           </li>
           <li class="nav-item" role="presentation">
-            <a class="nav-link mb-sm-3 mb-md-0"  href="#cards" aria-controls="cards" role="tab" data-toggle="tab">Cards <span class="badge badge-md badge-floating badge-success border-white">New</span></a>
+            <a class="nav-link mb-sm-3 mb-md-0"  href="#cards" aria-controls="cards" role="tab" data-toggle="tab">Cards</a>
           </li>
         </ul>
       </div>
@@ -46,7 +47,36 @@
             </div>
         </div>
         <div role="tabpanel" class="tab-pane  justify-content-center" id="cards">
-            List will go here
+          <div class="row  justify-content-center">
+            <div class="col-lg-10 col-md-10">
+              <div class=" shadow border-0">
+                <div class="form-group">
+                  <input  class="input-group form-control input-group-alternative text-primary" type="text" id="myInput" onkeyup="filterTweets()" placeholder="Filter data (e.g. Les Cayes)...">
+                </div>
+              </div>
+            </div>
+          </div>
+          <div id="totalReports" class="row  justify-content-center mb-2">
+            Total Reliefs: {{data | length}}
+          </div>
+          <div  id="relief-cards" class="card-columns justify-content-center">
+            {% for relief in data %}
+            <div class="row">
+              <a href="{{relief.pub_link}}" target="_blank" class="text-dark">
+                <div class="col ">
+                  <div class="card shadow border-0 pt-2 px-4">
+                    <small class="text-muted">{{relief.donation_date}}</small>
+                    <h3>{{relief.item_type}}: {{relief.quantity|intcomma}} {{relief.unit}}</h3>
+                    <p><span class="badge badge-primary">Donor</span>{{relief.donor}}</p>
+                    <p><span class="badge badge-primary">Receiver</span>{{relief.receiver}}</p>
+                    <p>{% if relief.target_location %}{{relief.target_location}} | {% endif %} {{relief.relief_designation}}</p>
+                  </div>
+                </div>
+              </a>
+              <div style="display: none" class="reliefdata">{{relief.item_type}}  {{relief.donor}} {{relief.receiver}} {{relief.target_location}} {{relief.relief_designation}}</div>
+            </div>
+            {% endfor %}
+          </div>
 
         </div>
       {% include "includes/footer.html" %}
@@ -56,4 +86,28 @@
 
 <!-- Specific JS goes HERE -->
 {% block javascripts %}
+<script>
+  function filterTweets() {
+    // Declare variables
+    var input, filter, cardsdiv, cards, txt, i, txtValue, totalElem, totalReports;
+    input = document.getElementById('myInput');
+    filter = input.value.toUpperCase();
+    cardsdiv = document.getElementById("relief-cards");
+    cards = cardsdiv.getElementsByClassName('row');
+    totalElem = document.getElementById("totalReports");
+    totalReports = 0;
+    // Loop through all list items, and hide those who don't match the search query
+    for (i = 0; i < cards.length; i++) {
+      txt = cards[i].getElementsByClassName("reliefdata")[0];
+      txtValue = txt.textContent || txt.innerText;
+      if (txtValue.toUpperCase().indexOf(filter) > -1) {
+        cards[i].style.display = "";
+        totalReports++;
+      } else {
+        cards[i].style.display = "none";
+      }
+    }
+    totalElem.innerText = "Total Reports: " + totalReports.toString()
+  }
+  </script>
 {% endblock javascripts %}

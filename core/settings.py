@@ -59,6 +59,7 @@ INSTALLED_APPS = [
     "bootstrap_datepicker_plus",
     "django_tables2",
     "bootstrap3",
+    "django.contrib.humanize",
 ]
 
 MIDDLEWARE = [

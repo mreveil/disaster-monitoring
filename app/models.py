@@ -72,7 +72,7 @@ class Relief(models.Model):
     item_type = models.CharField(
         max_length=50,
         choices=[
-            (MONEY, "Money"),
+            (MONEY, "Capital"),
             (FOOD, "Food"),
             (NECESSITIES, "Necessities"),
             (PERSONNEL, "Skilled Personnel"),
