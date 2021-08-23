@@ -203,6 +203,7 @@ function initMap() {
     });
     // map.setCenter(marker.getPosition())
 
+
     var contentString = "";
     sorted_reports = report.reportitems.sort((a,b)=>{
       return new Date(b.fields.publication_time) - new Date(a.fields.publication_time)
@@ -215,11 +216,16 @@ function initMap() {
         hour: "numeric",
         minute: "2-digit"
       });
+      // console.log("New report: ", r)
+      if (r.fields.pub_link.includes("youtube.com")){
+        console.log("We found youtube: ", r.fields.embed_code, sorted_reports.length)
+      }
       var contentString = contentString + '<div class="info-window-content"><h2>' +
       date_str + '</h2>' + '<h3>';
       if (r.fields.title !== null) {contentString += r.fields.title;}
-      contentString += '</h3>' + r.fields.embed_code + '</div><br/>';
-    }
+      contentString += '</h3><div class="embed-responsive">' + r.fields.embed_code + '</div></div><br/>';
+
+      }
 
     var infowindow = new google.maps.InfoWindow({
       content:  '<div class="scrollFix">' + contentString + '</div>',
