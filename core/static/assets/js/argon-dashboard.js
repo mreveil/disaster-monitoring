@@ -216,10 +216,6 @@ function initMap() {
         hour: "numeric",
         minute: "2-digit"
       });
-      // console.log("New report: ", r)
-      if (r.fields.pub_link.includes("youtube.com")){
-        console.log("We found youtube: ", r.fields.embed_code, sorted_reports.length)
-      }
       var contentString = contentString + '<div class="info-window-content"><h2>' +
       date_str + '</h2>' + '<h3>';
       if (r.fields.title !== null) {contentString += r.fields.title;}
