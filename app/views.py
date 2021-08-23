@@ -115,7 +115,7 @@ def pages(request):
             context["key_events"] = key_events
 
         elif load_template == "relief-data.html":
-            reliefs = Relief.objects.all()
+            reliefs = Relief.objects.all().order_by("-donation_date")
             reliefs_table = ReliefTable(reliefs)
             djtables.config.RequestConfig(request, paginate={"per_page": 3}).configure(
                 reliefs_table
