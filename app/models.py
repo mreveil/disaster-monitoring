@@ -97,6 +97,7 @@ class Relief(models.Model):
     target_location = models.ForeignKey(
         Location, on_delete=models.SET_NULL, null=True, blank=True
     )
+    donation_date = models.DateTimeField(null=True, default=None)
 
 
 class Fundraiser(models.Model):

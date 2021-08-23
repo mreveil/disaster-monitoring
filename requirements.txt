@@ -16,3 +16,5 @@ sentry-sdk
 wagtail
 django-bootstrap-datepicker-plus
 django-tables2
+django-filter
+django-bootstrap3

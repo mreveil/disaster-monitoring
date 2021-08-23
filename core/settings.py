@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "django_filters",
     "rest_framework",
     "channels",
     "rest_framework.authtoken",
@@ -57,6 +58,7 @@ INSTALLED_APPS = [
     "blog",
     "bootstrap_datepicker_plus",
     "django_tables2",
+    "bootstrap3",
 ]
 
 MIDDLEWARE = [

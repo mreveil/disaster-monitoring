@@ -29,9 +29,17 @@ from app.serializers import (
     ReportSerializer,
     AuthorSerializer,
 )
-from app.models import Report, Author, KeyValuePair, Location, MediaCoverage, KeyEvent
+from app.models import (
+    Report,
+    Author,
+    KeyValuePair,
+    Location,
+    MediaCoverage,
+    KeyEvent,
+    Relief,
+)
 from app.forms import SubmitReportForm
-from app.tables import ReportTable
+from app.tables import ReportTable, ReliefTable, FilteredReliefListView
 from app.tweet_processing import process_tweet
 
 # @login_required(login_url="/login/")
@@ -93,24 +101,25 @@ def pages(request):
     # Pick out the html file name from the url. And load that template.
 
     context = {}
-    for key_value_pair in KeyValuePair.objects.all():
-        context[key_value_pair.key] = key_value_pair.value
-
     try:
 
         load_template = request.path.split("/")[-1]
         context["segment"] = load_template
 
-        print("segment is:", load_template)
-
         if load_template == "media-coverage.html":
             news_articles = MediaCoverage.objects.all()
             context["articles"] = news_articles
 
-        if load_template == "timeline.html":
+        elif load_template == "timeline.html":
             key_events = KeyEvent.objects.all().order_by("-pub_time")
             context["key_events"] = key_events
-            print("Key events are: ", key_events)
+
+        elif load_template == "relief-data.html":
+            reliefs_table = ReliefTable(Relief.objects.all())
+            djtables.config.RequestConfig(request, paginate={"per_page": 3}).configure(
+                reliefs_table
+            )
+            context["table"] = reliefs_table
 
         html_template = loader.get_template(load_template)
         return HttpResponse(html_template.render(context, request))
