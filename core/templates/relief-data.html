@@ -57,24 +57,29 @@
             </div>
           </div>
           <div id="totalReports" class="row  justify-content-center mb-2">
-            Total Reliefs: {{data | length}}
+            Total Records: {{data | length}}
           </div>
           <div  id="relief-cards" class="card-columns justify-content-center">
             {% for relief in data %}
-            <div class="row">
-              <a href="{{relief.pub_link}}" target="_blank"  rel="noopener noreferrer" class="text-dark">
-                <div class="col ">
+            <!-- <div class="row">
+              <a href="{{relief.pub_link}}" target="_blank"  rel="noopener noreferrer" class="text-dark"> -->
+                <!-- <div class="col "> -->
                   <div class="card shadow border-0 pt-2 px-4">
-                    <small class="text-muted">{{relief.donation_date}}</small>
-                    <h3>{{relief.item_type}}: {{relief.quantity|intcomma}} {{relief.unit}}</h3>
-                    <p><span class="badge badge-primary">Donor</span>{{relief.donor}}</p>
-                    <p><span class="badge badge-primary">Receiver</span>{{relief.receiver}}</p>
-                    <p>{% if relief.target_location %}{{relief.target_location}} | {% endif %} {{relief.relief_designation}}</p>
+                    <div  class="card-body">
+                      <small class="text-muted">{{relief.donation_date}}</small>
+                      <h3 class="card-title"> <i class="fas fa-handshake"></i> {{relief.item_type}}: {{relief.quantity|intcomma}} {{relief.unit}}</h3>
+                      <p class="card-text"><span class="badge badge-primary">Donor</span>{{relief.donor}}</p>
+                      <p class="card-text"><span class="badge badge-primary">Receiver</span>{{relief.receiver}}</p>
+                      <p class="card-text">{% if relief.target_location %}<i class="fas fa-location-arrow"></i>{{relief.target_location}} {% endif %}</p>
+                      <p class="card-text"><i class="fas fa-info"></i>  {{relief.relief_designation}}</p>
+                      <a href="{{relief.pub_link}}" target="_blank"  rel="noopener noreferrer"  class="btn  btn-link px-0">View Publication</a>
+                    </div>
+
                   </div>
-                </div>
-              </a>
+                <!-- </div> -->
+              <!-- </a> -->
               <div style="display: none" class="reliefdata">{{relief.item_type}}  {{relief.donor}} {{relief.receiver}} {{relief.target_location}} {{relief.relief_designation}}</div>
-            </div>
+            <!-- </div> -->
             {% endfor %}
           </div>
 
@@ -107,7 +112,7 @@
         cards[i].style.display = "none";
       }
     }
-    totalElem.innerText = "Total Reports: " + totalReports.toString()
+    totalElem.innerText = "Total Records: " + totalReports.toString()
   }
   </script>
 {% endblock javascripts %}
