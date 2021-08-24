@@ -86,7 +86,7 @@ class Relief(models.Model):
         ],
     )
     item_subtype = models.CharField(max_length=50, null=True, blank=True)
-    quantity = models.IntegerField(default=0)
+    quantity = models.FloatField(default=0)
     unit = models.CharField(max_length=50)
     status = models.CharField(
         max_length=50, choices=[(PROMISED, "Promised"), (DELIVERED, "Delivered")]
@@ -97,7 +97,7 @@ class Relief(models.Model):
     target_location = models.ForeignKey(
         Location, on_delete=models.SET_NULL, null=True, blank=True
     )
-    donation_date = models.DateTimeField(null=True, default=None)
+    publication_date = models.DateField(null=True, default=None)
 
 
 class Fundraiser(models.Model):
