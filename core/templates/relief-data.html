@@ -67,7 +67,7 @@
                   <div class="card shadow border-0 pt-2 px-4">
                     <div  class="card-body">
                       <small class="text-muted">{{relief.donation_date}}</small>
-                      <h3 class="card-title"> <i class="fas fa-handshake"></i> {{relief.item_type}}: {{relief.quantity|intcomma}} {{relief.unit}}</h3>
+                      <h3 class="card-title"> <i class="fas fa-handshake"></i> {{relief.item_type}}: {% if relief.quantity >= 0 %} {{relief.quantity|intcomma}} {% endif %} {{relief.unit}}</h3>
                       <p class="card-text"><span class="badge badge-primary">Donor</span>{{relief.donor}}</p>
                       <p class="card-text"><span class="badge badge-primary">Receiver</span>{{relief.receiver}}</p>
                       <p class="card-text">{% if relief.target_location %}<i class="fas fa-location-arrow"></i>{{relief.target_location}} {% endif %}</p>

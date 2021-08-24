@@ -101,40 +101,40 @@ def pages(request):
     # Pick out the html file name from the url. And load that template.
 
     context = {}
-    try:
+    # try:
 
-        load_template = request.path.split("/")[-1]
-        context["segment"] = load_template
+    load_template = request.path.split("/")[-1]
+    context["segment"] = load_template
 
-        if load_template == "media-coverage.html":
-            news_articles = MediaCoverage.objects.all()
-            context["articles"] = news_articles
+    if load_template == "media-coverage.html":
+        news_articles = MediaCoverage.objects.all()
+        context["articles"] = news_articles
 
-        elif load_template == "timeline.html":
-            key_events = KeyEvent.objects.all().order_by("-pub_time")
-            context["key_events"] = key_events
+    elif load_template == "timeline.html":
+        key_events = KeyEvent.objects.all().order_by("-pub_time")
+        context["key_events"] = key_events
 
-        elif load_template == "relief-data.html":
-            reliefs = Relief.objects.all().order_by("-donation_date")
-            reliefs_table = ReliefTable(reliefs)
-            djtables.config.RequestConfig(request, paginate={"per_page": 15}).configure(
-                reliefs_table
-            )
-            context["table"] = reliefs_table
-            context["data"] = reliefs
+    elif load_template == "relief-data.html":
+        reliefs = Relief.objects.all().order_by("-publication_date")
+        reliefs_table = ReliefTable(reliefs)
+        djtables.config.RequestConfig(request, paginate={"per_page": 15}).configure(
+            reliefs_table
+        )
+        context["table"] = reliefs_table
+        context["data"] = reliefs
 
-        html_template = loader.get_template(load_template)
-        return HttpResponse(html_template.render(context, request))
+    html_template = loader.get_template(load_template)
+    return HttpResponse(html_template.render(context, request))
 
-    except template.TemplateDoesNotExist:
+    # except template.TemplateDoesNotExist:
 
-        html_template = loader.get_template("page-404.html")
-        return HttpResponse(html_template.render(context, request))
+    #     html_template = loader.get_template("page-404.html")
+    #     return HttpResponse(html_template.render(context, request))
 
-    except:
+    # except:
 
-        html_template = loader.get_template("page-500.html")
-        return HttpResponse(html_template.render(context, request))
+    #     html_template = loader.get_template("page-500.html")
+    #     return HttpResponse(html_template.render(context, request))
 
 
 class UserViewSet(viewsets.ModelViewSet):
