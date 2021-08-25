@@ -37,8 +37,9 @@ from app.models import (
     MediaCoverage,
     KeyEvent,
     Relief,
+    UserSubmission,
 )
-from app.forms import SubmitReportForm
+from app.forms import SubmitReportForm, SubmitLinkForm
 from app.tables import ReportTable, ReliefTable, FilteredReliefListView
 from app.tweet_processing import process_tweet
 
@@ -57,7 +58,6 @@ def index(request):
     djtables.config.RequestConfig(request, paginate={"per_page": 10}).configure(
         reports_table
     )
-    # reports_table.paginate(page=request.GET.get("page", 1), per_page=10)
 
     for key_value_pair in KeyValuePair.objects.all():
         context[key_value_pair.key + "_value"] = key_value_pair.value
@@ -95,6 +95,50 @@ def index(request):
     return HttpResponse(html_template.render(context, request))
 
 
+def load_relief_data_context(request):
+
+    context = {}
+    load_template = "relief-data.html"
+
+    context["segment"] = load_template
+
+    reliefs = Relief.objects.all().order_by("-publication_date")
+    reliefs_table = ReliefTable(reliefs)
+    djtables.config.RequestConfig(request, paginate={"per_page": 15}).configure(
+        reliefs_table
+    )
+    context["table"] = reliefs_table
+    context["data"] = reliefs
+
+    clean_form = False
+    if request.method == "POST":
+        # Create form instance
+        form = SubmitLinkForm(request.POST)
+        clean_form = True
+
+        if form.is_valid():
+            try:
+                UserSubmission.objects.create(
+                    pub_link=form.cleaned_data["pub_link"],
+                    submission_type=UserSubmission.RELIEF,
+                )
+                msg = "Thanks for your contribution. Your link will be verified and added later."
+            except IntegrityError:
+                msg = "Link has already been added. Please add a new one."
+
+            messages.success(
+                request, msg,
+            )
+        else:
+            messages.error(request, "Invalid link. Please try a different one.")
+    else:
+        form = SubmitReportForm()
+
+    context["form"] = form
+    context["clean_form"] = clean_form
+    return context
+
+
 # @login_required(login_url="/login/")
 def pages(request):
     # All resource paths end in .html.
@@ -115,13 +159,9 @@ def pages(request):
         context["key_events"] = key_events
 
     elif load_template == "relief-data.html":
-        reliefs = Relief.objects.all().order_by("-publication_date")
-        reliefs_table = ReliefTable(reliefs)
-        djtables.config.RequestConfig(request, paginate={"per_page": 15}).configure(
-            reliefs_table
-        )
-        context["table"] = reliefs_table
-        context["data"] = reliefs
+        context.update(load_relief_data_context(request))
+        if context["clean_form"]:
+            return HttpResponseRedirect("/relief-data.html")
 
     html_template = loader.get_template(load_template)
     return HttpResponse(html_template.render(context, request))

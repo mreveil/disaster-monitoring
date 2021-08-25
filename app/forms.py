@@ -3,6 +3,7 @@ import datetime
 from django import forms
 from django.core.exceptions import ValidationError
 from django.utils.translation import ugettext_lazy as _
+from django.core.validators import URLValidator
 
 from bootstrap_datepicker_plus import DateTimePickerInput
 
@@ -47,3 +48,13 @@ class SubmitReportForm(forms.Form):
             raise ValidationError(_("Invalid date - cannot be in the future"))
 
         return data
+
+
+class SubmitLinkForm(forms.Form):
+    pub_link = forms.CharField(
+        validators=[URLValidator()],
+        widget=forms.TextInput(
+            attrs={"placeholder": "Enter a URL", "class": "form-control",}
+        ),
+        help_text="Enter a URL.).",
+    )

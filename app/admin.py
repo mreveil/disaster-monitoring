@@ -14,6 +14,7 @@ from app.models import (
     Fundraiser,
     Relief,
     Institution,
+    UserSubmission,
 )
 
 # Register your models here.
@@ -26,3 +27,4 @@ admin.site.register(KeyEvent)
 admin.site.register(Fundraiser)
 admin.site.register(Institution)
 admin.site.register(Relief)
+admin.site.register(UserSubmission)

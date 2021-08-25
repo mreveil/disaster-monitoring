@@ -21,6 +21,39 @@ class Author(models.Model):
         unique_together = ["profile_link"]
 
 
+class UserSubmission(models.Model):
+
+    PENDING_REVIEW = "Pending review"
+    APPROVED = "Approved"
+    DISMISSED = "Dismissed"
+
+    RELIEF = "Relief"
+    FUNDRAISER = "Fundraiser"
+    REPORT = "Report"
+
+    pub_link = models.CharField(max_length=250)
+    submission_datetime = models.DateTimeField(auto_now=True)
+    submission_type = models.CharField(
+        max_length=15,
+        choices=[(RELIEF, "Relief"), (FUNDRAISER, "Fundraiser"), (REPORT, "Report")],
+    )
+    status = models.CharField(
+        max_length=25,
+        default=PENDING_REVIEW,
+        choices=[
+            (PENDING_REVIEW, "Pending Review"),
+            (APPROVED, "Approved"),
+            (DISMISSED, "Dismissed"),
+        ],
+    )
+
+    def __str__(self):
+        return "%s [%s]" % (self.pub_link, self.submission_type)
+
+    class Meta:
+        unique_together = ["pub_link"]
+
+
 class Institution(models.Model):
     name = models.CharField(max_length=50)
     country = models.CharField(max_length=50)
