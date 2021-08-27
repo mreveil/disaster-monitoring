@@ -126,7 +126,7 @@
                   <div>
                     <div class="text-center">
                         <h3 class="text-white">
-                          Submit a tweet about a local area to add it to the map
+                          Submit a Facebook, Instagram, Twitter or YouTube post about a local area to add it to the map
                         </h3>
                         <!-- <h5 class="card-title text-uppercase text-info">
                           Total Submitted: <span id="nreports" class="font-weight-bold"></span>
@@ -153,7 +153,7 @@
                         {% endif %}
                       </div>
                       <div class="text-center">
-                        <button type="submit" class="btn btn-secondary">Submit Tweet</button>
+                        <button type="submit" class="btn btn-secondary">Submit Social Media Post</button>
                       </div>
                     </form>
 
@@ -205,12 +205,13 @@
         </div>
         <div  id="tweet-cards" class="card-columns justify-content-center">
           {% for report in reports %}
-          <div  class="card embed-responsive bg-transparent border-0 clearfix" id="tweet-card">
+          <div  class="card bg-transparent border-0 clearfix" id="tweet-card">
             {{report.embed_code | safe}}
             <div style="display: none" class="tweetdata">{{report.embed_code}}</div>
           </div>
           {% endfor %}
         </div>
+
 
     </div>
 

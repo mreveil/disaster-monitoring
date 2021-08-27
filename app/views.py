@@ -6,6 +6,7 @@ import json
 import requests
 import unicodedata
 import datetime
+from urllib.parse import urlparse
 
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
@@ -70,17 +71,35 @@ def index(request):
         clean_form = True
 
         if form.is_valid():
-            msg, success = process_tweet(
-                form.cleaned_data["pub_link"], form.cleaned_data["pub_datetime"]
-            )
+            pub_link = form.cleaned_data["pub_link"]
+            host = urlparse(pub_link).hostname
+            if host and host.endswith(".twitter.com"):
+                msg, success = process_tweet(
+                    pub_link, form.cleaned_data["pub_datetime"]
+                )
+            else:
+                try:
+                    UserSubmission.objects.create(
+                        pub_link=form.cleaned_data["pub_link"],
+                        submission_type=UserSubmission.RELIEF,
+                        publication_datetime=form.cleaned_data["pub_datetime"],
+                    )
+                    success = True
+                    msg = "Thanks for your contribution. Your link will be verified and added later."
+                except IntegrityError:
+                    success = False
+                    msg = "Link has already been added. Please add a new one."
+
             if success:
                 messages.success(request, msg)
             else:
                 messages.error(request, msg)
+
         else:
             print("The form is not valid.")
             messages.error(
-                request, "Invalid link. Only tweets can be submitted for now."
+                request,
+                "Invalid link. Only Facebook, Instagram, Twitter and YouTube links are supported.",
             )
     else:
         form = SubmitReportForm()

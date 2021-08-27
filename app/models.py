@@ -37,6 +37,7 @@ class UserSubmission(models.Model):
         max_length=15,
         choices=[(RELIEF, "Relief"), (FUNDRAISER, "Fundraiser"), (REPORT, "Report")],
     )
+    publication_datetime = models.DateTimeField(null=True, default=None, blank=True)
     status = models.CharField(
         max_length=25,
         default=PENDING_REVIEW,
@@ -188,7 +189,7 @@ class Report(models.Model):
         max_length=25, default="General"
     )  # Food, Water, Medical Supplies,
     bad_feedback = models.IntegerField(default=0)
-    embed_code = models.CharField(max_length=1500)
+    embed_code = models.CharField(max_length=15000)
     resolved = models.BooleanField(default=False)
     dismissed = models.BooleanField(default=False)
     require_review = models.BooleanField(default=False)

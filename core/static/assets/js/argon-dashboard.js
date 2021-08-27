@@ -53,8 +53,8 @@ for (var i=0;i<reports.length;i++){
 
 // Update number of reports on the dashboard
 
-help_needed_el = document.getElementById("nreports")
-help_needed_el.innerHTML = nreports;
+// help_needed_el = document.getElementById("nreports")
+// help_needed_el.innerHTML = nreports;
 //
 // Bootstrap Datepicker
 //
@@ -216,16 +216,16 @@ function initMap() {
         hour: "numeric",
         minute: "2-digit"
       });
-      var contentString = contentString + '<div class="info-window-content"><h2>' +
+      var contentString = contentString + '<div><h2>' +
       date_str + '</h2>' + '<h3>';
       if (r.fields.title !== null) {contentString += r.fields.title;}
-      contentString += '</h3><div class="embed-responsive">' + r.fields.embed_code + '</div></div><br/>';
+      contentString += '</h3>' + r.fields.embed_code + '</div><br/>';
 
       }
 
     var infowindow = new google.maps.InfoWindow({
       content:  '<div class="scrollFix">' + contentString + '</div>',
-      maxWidth: 800
+      maxWidth: 550
     });
 
     google.maps.event.addListener(marker,'click', (function(marker,contentString,infowindow){

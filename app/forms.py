@@ -1,4 +1,5 @@
 import datetime
+from urllib.parse import urlparse
 
 from django import forms
 from django.core.exceptions import ValidationError
@@ -12,27 +13,34 @@ class SubmitReportForm(forms.Form):
     pub_link = forms.CharField(
         widget=forms.TextInput(
             attrs={
-                "placeholder": "e.g. https://twitter.com/Frantzduval/status/1426921202254336002",
+                "placeholder": "Example: https://twitter.com/Frantzduval/status/1426921202254336002",
                 "class": "form-control",
             }
         ),
-        help_text="Enter a link to a tweet about a need.).",
+        help_text="Enter a link to a Facebook, Instagram, Twitter or YouTube post about a need.",
     )
 
     pub_datetime = forms.DateTimeField(
         widget=DateTimePickerInput(
             # format="%m/%d/%Y %I:%M %p",
-            attrs={"placeholder": "Enter the tweet date and time"},
+            attrs={"placeholder": "Enter the post date and time"},
         ),
-        help_text="Enter the date and time when this tweet was published.).",
+        help_text="Enter the date and time when this post was published.).",
     )
 
     def clean_pub_link(self):
         data = self.cleaned_data["pub_link"]
-
-        if not data.startswith("https://twitter.com"):
+        host = urlparse(data).hostname
+        if not host or not (
+            host.endswith(".twitter.com")
+            or host.endswith(".facebook.com")
+            or host.endswith(".youtube.com")
+            or host.endswith(".instagram.com")
+        ):
             raise ValidationError(
-                _("Invalid link. Only tweets can be reported for now.")
+                _(
+                    "Invalid link. Only Twitter, Facebook, Instagram or YouTube posts are supported."
+                )
             )
 
         return data
