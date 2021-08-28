@@ -37,7 +37,6 @@ class UserSubmission(models.Model):
         max_length=15,
         choices=[(RELIEF, "Relief"), (FUNDRAISER, "Fundraiser"), (REPORT, "Report")],
     )
-    publication_datetime = models.DateTimeField(null=True, default=None, blank=True)
     status = models.CharField(
         max_length=25,
         default=PENDING_REVIEW,
@@ -136,6 +135,7 @@ class Relief(models.Model):
 
 class Fundraiser(models.Model):
     institution = models.ForeignKey(Institution, on_delete=models.SET_NULL, null=True)
+    author = models.CharField(max_length=250,null=True)
     description = models.CharField(max_length=1500)
     title = models.CharField(max_length=100)
     goal = models.IntegerField(default=0)
@@ -144,6 +144,7 @@ class Fundraiser(models.Model):
     pub_link = models.CharField(max_length=250)
     embed_code = models.CharField(max_length=1500)
     target_location = models.ForeignKey(Location, on_delete=models.SET_NULL, null=True)
+    publication_date = models.DateField(null=True, default=None)
 
 
 class MediaCoverage(models.Model):
@@ -189,7 +190,7 @@ class Report(models.Model):
         max_length=25, default="General"
     )  # Food, Water, Medical Supplies,
     bad_feedback = models.IntegerField(default=0)
-    embed_code = models.CharField(max_length=15000)
+    embed_code = models.CharField(max_length=1500)
     resolved = models.BooleanField(default=False)
     dismissed = models.BooleanField(default=False)
     require_review = models.BooleanField(default=False)

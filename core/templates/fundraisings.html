@@ -1,0 +1,160 @@
+{% extends 'layouts/base.html' %}
+{% load render_table from django_tables2 %}
+{% load bootstrap3 %}
+{% load humanize %}
+{% block title %} Fundraisings {% endblock title %}
+
+<!-- Specific CSS goes HERE -->
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% block content %}
+
+    <!-- Header -->
+    <div class="header bg-gradient-primary pb-8 pt-5 pt-md-8">
+        <div class="container-fluid">
+          <div style="text-align: center; color: white;">
+            <h1 style="color: white;">Fundraisers<span class="badge badge-md badge-floating badge-primary border-white">New</span></h1>
+            <div  class="intro">Fundraisers for disaster relief</div>
+          </div>
+        </div>
+
+        <hr>
+
+        <div class="container pb-0 mt-0">
+          <div class="row justify-content-center">
+            <div class="col-lg-10 col-md-10">
+              <div class=" shadow border-0">
+
+                <div>
+                  <div class="text-center">
+                      <h3 class="text-white">
+                        Submit a link with fundraiser for inclusion in the database
+                      </h3>
+                  </div>
+
+                  <form method="POST">
+
+                    {% csrf_token %}
+
+                    <div class="form-group mb-3">
+                      <div class="input-group input-group-alternative pb-2 text-primary">
+                        {{ form.pub_link }}
+                      </div>
+                    </div>
+                    <div class="text-center text-info">
+                      {% if messages %}
+                        {% for message in messages %}
+                        <p{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</p>
+                        {% endfor %}
+                      {% endif %}
+                    </div>
+                    <div class="text-center">
+                      <button type="submit" class="btn btn-secondary">Submit Link</button>
+                    </div>
+                  </form>
+
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+    </div>
+
+    <div class="container-fluid" >
+      <!-- mt--9"> -->
+      <div class="nav-wrapper">
+        <ul class="nav nav-pills nav-fill flex-column flex-md-row" role="tablist">
+          <li class="nav-item" role="presentation" >
+            <a class="nav-link mb-sm-3 mb-md-0 active"  href="#table" aria-controls="table" role="tab" data-toggle="tab">Table</a>
+          </li>
+          <li class="nav-item" role="presentation">
+            <a class="nav-link mb-sm-3 mb-md-0"  href="#cards" aria-controls="cards" role="tab" data-toggle="tab">Cards</a>
+          </li>
+        </ul>
+      </div>
+        <!-- Tab panes -->
+    <div class="tab-content">
+        <div role="tabpanel" class="tab-pane   show active justify-content-center" id="table">
+            <div class="row">
+                {% if filter %}
+                    <form action="" method="get" class="form form-inline">
+                        {% bootstrap_form filter.form layout='inline' %}
+                        {% bootstrap_button 'filter' %}
+                    </form>
+                {% endif %}
+                <div class="card">
+                    {% render_table table %}
+                </div>
+            </div>
+        </div>
+        <div role="tabpanel" class="tab-pane  justify-content-center" id="cards">
+          <div class="row  justify-content-center">
+            <div class="col-lg-10 col-md-10">
+              <div class=" shadow border-0">
+                <div class="form-group">
+                  <input  class="input-group form-control input-group-alternative text-primary" type="text" id="myInput" onkeyup="filterTweets()" placeholder="Filter data (e.g. Les Cayes)...">
+                </div>
+              </div>
+            </div>
+          </div>
+          <div id="totalReports" class="row  justify-content-center mb-2">
+            Total Records: {{data | length}}
+          </div>
+          <div  id="fundraiser-cards" class="card-columns justify-content-center">
+            {% for fundraiser in data %}
+            <!-- <div class="row">
+              <a href="{{relief.pub_link}}" target="_blank"  rel="noopener noreferrer" class="text-dark"> -->
+                <!-- <div class="col "> -->
+                  <div class="card shadow border-0 pt-2 px-4">
+                    <div  class="card-body"> 
+                      <small class="text-muted">{{fundraiser.publication_date}}</small>
+                      <h3 class="card-title"> <i class="fa fa-handshake"></i>  {{fundraiser.title}}</h3>
+                      <h3 class="card-title"> <i class="fa fa-money"> Goal</i>  {{fundraiser.goal|intcomma}} {{fundraiser.unit}}</h3>
+                      <p class="card-text"><span class="badge badge-primary">Author</span> {{fundraiser.author}}</p>
+                      <!-- <h3 class="card-title"> <i class="fas fa-handshake"></i> {{fundraiser.item_type}}: {% if relief.quantity >= 0 %} {{relief.quantity|intcomma}} {% endif %} {{relief.unit}}</h3>
+                      -->                       
+                      <p class="card-text">{% if fundraiser.target_location %}<i class="fas fa-location-arrow"></i>{{fundraiser.target_location}} {% endif %}</p>
+                      <a href="{{fundraiser.pub_link}}" target="_blank"  rel="noopener noreferrer"  class="btn  btn-link px-0">View Publication</a>
+                    </div>
+
+                  </div>
+                <!-- </div> -->
+              <!-- </a> -->
+               <div style="display: none" class="fundraiserdata">{{fundraiser.title}}  {{fundraiser.author}}  {{fundraiser.target_location}}</div> 
+            <!-- </div> -->
+            {% endfor %}
+          </div>
+
+        </div>
+      {% include "includes/footer.html" %}
+    </div>
+
+{% endblock content %}
+
+<!-- Specific JS goes HERE -->
+{% block javascripts %}
+<script>
+  function filterTweets() {
+    // Declare variables
+    var input, filter, cardsdiv, cards, txt, i, txtValue, totalElem, totalReports;
+    input = document.getElementById('myInput');
+    filter = input.value.toUpperCase();
+    cardsdiv = document.getElementById("fundraiser-cards");
+    cards = cardsdiv.getElementsByClassName('row');
+    totalElem = document.getElementById("totalReports");
+    totalReports = 0;
+    // Loop through all list items, and hide those who don't match the search query
+    for (i = 0; i < cards.length; i++) {
+      txt = cards[i].getElementsByClassName("fundraiserdata")[0];
+      txtValue = txt.textContent || txt.innerText;
+      if (txtValue.toUpperCase().indexOf(filter) > -1) {
+        cards[i].style.display = "";
+        totalReports++;
+      } else {
+        cards[i].style.display = "none";
+      }
+    }
+    totalElem.innerText = "Total Records: " + totalReports.toString()
+  }
+  </script>
+{% endblock javascripts %}
