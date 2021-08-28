@@ -6,7 +6,6 @@ import json
 import requests
 import unicodedata
 import datetime
-from urllib.parse import urlparse
 
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
@@ -36,12 +35,13 @@ from app.models import (
     KeyValuePair,
     Location,
     MediaCoverage,
-    KeyEvent,
+    KeyEvent, 
     Relief,
     UserSubmission,
+    Fundraiser,
 )
 from app.forms import SubmitReportForm, SubmitLinkForm
-from app.tables import ReportTable, ReliefTable, FilteredReliefListView
+from app.tables import ReportTable, ReliefTable, FundraiserTable, FilteredReliefListView
 from app.tweet_processing import process_tweet
 
 # @login_required(login_url="/login/")
@@ -71,35 +71,17 @@ def index(request):
         clean_form = True
 
         if form.is_valid():
-            pub_link = form.cleaned_data["pub_link"]
-            host = urlparse(pub_link).hostname
-            if host and host.endswith(".twitter.com"):
-                msg, success = process_tweet(
-                    pub_link, form.cleaned_data["pub_datetime"]
-                )
-            else:
-                try:
-                    UserSubmission.objects.create(
-                        pub_link=form.cleaned_data["pub_link"],
-                        submission_type=UserSubmission.RELIEF,
-                        publication_datetime=form.cleaned_data["pub_datetime"],
-                    )
-                    success = True
-                    msg = "Thanks for your contribution. Your link will be verified and added later."
-                except IntegrityError:
-                    success = False
-                    msg = "Link has already been added. Please add a new one."
-
+            msg, success = process_tweet(
+                form.cleaned_data["pub_link"], form.cleaned_data["pub_datetime"]
+            )
             if success:
                 messages.success(request, msg)
             else:
                 messages.error(request, msg)
-
         else:
             print("The form is not valid.")
             messages.error(
-                request,
-                "Invalid link. Only Facebook, Instagram, Twitter and YouTube links are supported.",
+                request, "Invalid link. Only tweets can be submitted for now."
             )
     else:
         form = SubmitReportForm()
@@ -158,6 +140,51 @@ def load_relief_data_context(request):
     return context
 
 
+
+def load_fundraisings_context(request):
+
+    context = {}
+    load_template = "fundraisings.html"
+
+    context["segment"] = load_template
+
+    fundraisers = Fundraiser.objects.all().order_by("-publication_date")
+    fundraisers_table = FundraiserTable(fundraisers)
+    djtables.config.RequestConfig(request, paginate={"per_page": 15}).configure(
+        fundraisers_table
+    )
+    context["table"] = fundraisers_table
+    context["data"] = fundraisers
+
+    clean_form = False
+    if request.method == "POST":
+        # Create form instance
+        form = SubmitLinkForm(request.POST)
+        clean_form = True
+
+        if form.is_valid():
+            try:
+                UserSubmission.objects.create(
+                    pub_link=form.cleaned_data["pub_link"],
+                    submission_type=UserSubmission.FUNDRAISER,
+                )
+                msg = "Thanks for your contribution. Your link will be verified and added later."
+            except IntegrityError:
+                msg = "Link has already been added. Please add a new one."
+
+            messages.success(
+                request, msg,
+            )
+        else:
+            messages.error(request, "Invalid link. Please try a different one.") 
+    else:
+        form = SubmitReportForm()
+
+    context["form"] = form
+    context["clean_form"] = clean_form
+    return context
+
+
 # @login_required(login_url="/login/")
 def pages(request):
     # All resource paths end in .html.
@@ -181,6 +208,10 @@ def pages(request):
             context.update(load_relief_data_context(request))
             if context["clean_form"]:
                 return HttpResponseRedirect("/relief-data.html")
+        elif load_template == "fundraisings.html":
+            context.update(load_fundraisings_context(request))
+            if context["clean_form"]:
+                return HttpResponseRedirect("/fundraisings.html")
 
         html_template = loader.get_template(load_template)
         return HttpResponse(html_template.render(context, request))
@@ -190,10 +221,10 @@ def pages(request):
         html_template = loader.get_template("page-404.html")
         return HttpResponse(html_template.render(context, request))
 
-    except:
+    # except:
 
-        html_template = loader.get_template("page-500.html")
-        return HttpResponse(html_template.render(context, request))
+    #     html_template = loader.get_template("page-500.html")
+    #     return HttpResponse(html_template.render(context, request))
 
 
 class UserViewSet(viewsets.ModelViewSet):
